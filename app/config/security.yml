@@ -1,0 +1,59 @@
+security:
+
+    encoders:
+        AppBundle\Entity\Usuario:
+            algorithm: bcrypt
+            cost: 15
+
+    providers:
+        db_user:
+            entity:
+                class: AppBundle:Usuario
+                property: user
+
+    role_hierarchy:
+#        ROLE_ADMIN: [ROLE_ADMIN, ROLE_DIRECTOR, ROLE_JABOGADO, ROLE_ABOGADO, ROLE_JRH, ROLE_RH, ROLE_RECEPCION]
+        ROLE_JABOGADO: [ROLE_JABOGADO, ROLE_ABOGADO]
+        ROLE_JRH: [ROLE_JRH, ROLE_RH]
+
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        login_firewall:
+            pattern: ^/login$
+            anonymous: ~
+            provider: db_user
+
+        secured_area:
+            pattern: ^/
+            form_login:
+                login_path: /login
+                check_path: /login_check
+                default_target_path: _redirect
+#                csrf_provider: security.csrf.token_manager
+#            csrf_parameter: _csrf_security_token
+#            intention: +D2DsdFrnT
+
+            logout:
+                path: /logout
+                target: /login
+
+            remember_me:
+                secret: '%secret%'
+                lifetime: 604800 # 1 week in seconds
+                path: /
+
+    access_control:
+    - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+    - { path: ^/redirect, roles: IS_AUTHENTICATED_FULLY }
+    - { path: ^/seguridad/usuario/cambiar-contrasena, roles: IS_AUTHENTICATED_FULLY }
+    - { path: ^/seguridad, roles: ROLE_ADMIN }
+    - { path: ^/recepcion, roles: [ ROLE_ADMIN, ROLE_DIRECTOR, ROLE_RECEPCION, ROLE_ABOGADO, ROLE_CF ] }
+    - { path: ^/rh/constantes/, roles: [ ROLE_ADMIN, ROLE_JRH ] }
+    - { path: ^/rh, roles: [ ROLE_ADMIN, ROLE_DIRECTOR, ROLE_RH ] }
+    - { path: ^/area-legal, roles: [ ROLE_ADMIN, ROLE_DIRECTOR, ROLE_ABOGADO ] }
+    - { path: ^/control-de-fondo, roles: [ ROLE_ADMIN, ROLE_DIRECTOR, ROLE_CF ] }
+    - { path: ^/reportes, roles: [ ROLE_ADMIN, ROLE_DIRECTOR, ROLE_ABOGADO, ROLE_RH, ROLE_CF ] }
+    - { path: ^/, roles: IS_AUTHENTICATED_FULLY }

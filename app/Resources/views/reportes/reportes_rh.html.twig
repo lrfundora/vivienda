@@ -1,0 +1,234 @@
+{% extends 'templates/layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('assets/css/plugins/select2/select2.min.css') }}">
+    <link rel="stylesheet"
+          href="{{ asset('assets/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/plugins/datapicker/datepicker3.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/plugins/dataTables/datatables.min.css') }}">
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('assets/js/plugins/jsPDF/dist/jspdf.min.js') }}"></script>
+    <script src="{{ asset('assets/js/plugins/jsPDF/js/basic.js') }}"></script>
+    <script src="{{ asset('assets/js/plugins/select2/select2.full.min.js') }}"></script>
+    <script src="{{ asset('assets/js/plugins/datapicker/bootstrap-datepicker.js') }}"></script>
+    <script src="{{ asset('assets/js/plugins/dataTables/datatables.min.js') }}"></script>
+    <script src="{{ asset('assets/js/plugins/jeditable/jquery.jeditable.js') }}"></script>
+    <script src="{{ asset('assets/js/validations/validate.reporte.rh.js') }}"></script>
+    <script>
+        $(function () {
+            $('#editable').DataTable({
+                aaSorting: [[1, "asc"]]
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block breadcrumb %}
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            <h2 class="text-uppercase">reportes dinámicos: recursos humanos</h2>
+            <ol class="breadcrumb">
+                <li>
+                    <a href="{{ url('_inicio') }}">Inicio</a>
+                </li>
+                <li>
+                    Reportes dinámicos
+                </li>
+                <li class="active">
+                    <strong>Recursos humanos</strong>
+                </li>
+            </ol>
+        </div>
+        <div class="col-lg-2">
+        </div>
+    </div>
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5 class="text-uppercase">reportes dinámicos: recursos humanos</h5>
+
+                    <div class="ibox-content table-responsive">
+                        <div class="row">
+                            {{ form_start(form, {'attr':{'id':'form','novalidate':'novalidate'}}) }}
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    {{ form_label(form.columna, 'Dato') }}<br>
+                                    {{ form_widget(form.columna, {'attr':{'style':'width:100%'}}) }}
+                                </div>
+                            </div>
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    {{ form_label(form.coincidencia) }}<br>
+                                    {{ form_widget(form.coincidencia, {'attr':{'style':'width:100%'}}) }}
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    {{ form_label(form.criterio,'') }}
+                                    <input id="datetime" class="form-control input-group date" type="text">
+                                    <div id="div-cargo">
+                                        <select id="cargo" class="form-control">
+                                            {% for item in cargos %}
+                                                <option value="{{ item.nombre }}">{{ item.nombre }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div id="div-categoria">
+                                        <select id="categoria" class="form-control">
+                                            {% for item in categorias %}
+                                                <option value="{{ item.nombre }}">{{ item.nombre }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div id="div-contrato">
+                                        <select id="contrato" class="form-control">
+                                            {% for item in contratos %}
+                                                <option value="{{ item.tipo }}">{{ item.tipo }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div id="div-entidad">
+                                        <select id="entidad" class="form-control">
+                                            {% for item in entidades %}
+                                                <option value="{{ item.nombre }}">{{ item.nombre }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div id="div-escala">
+                                        <select id="escala" class="form-control">
+                                            {% for item in escalas %}
+                                                <option value="{{ item.escala }}">{{ item }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div id="div-escolaridad">
+                                        <select id="escolaridad" class="form-control">
+                                            {% for item in escolaridad %}
+                                                <option value="{{ item.nivel }}">{{ item.nivel }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div id="div-integracion">
+                                        <select id="integracion" class="form-control" multiple>
+                                            {% for item in integraciones %}
+                                                <option value="{{ item.nombre }}">{{ item.nombre }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    {{ form_widget(form.criterio, {'attr':{'class':''}}) }}
+                                    <label id="error" class="error"></label>
+                                </div>
+                            </div>
+                            <div class="col-lg-1">
+                                <div class="form-group">
+                                    {#<label>Sexo</label>#}
+                                    <div class="checkbox">
+                                        {{ form_widget(form.hombre) }}
+                                        {{ form_label(form.hombre) }}
+                                    </div>
+                                    <div class="checkbox">
+                                        {{ form_widget(form.mujer) }}
+                                        {{ form_label(form.mujer) }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-1">
+                                <div class="form-group">
+                                    <label>¿Es Baja?</label>
+                                    <br>
+                                    <div class="checkbox">
+                                        {{ form_widget(form.baja) }}
+                                        {{ form_label(form.baja, 'Si') }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <br>
+                                    <button id="send" type="button" class="btn btn-primary btn-block">
+                                        <i class="fa fa-search"></i> Buscar
+                                    </button>
+                                </div>
+                            </div>
+                            {{ form_end(form) }}
+                        </div>
+
+                    </div>
+                </div>
+                {% if results!='' %}
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div id="pdf" class="ibox-title">
+                                <div class="pull-right">
+                                    <a href="javascript:ExportToPDFFromHTML('pdf', 'reporte_dinamico_de_recursos_humanos')"
+                                       type="button" class="btn btn-outline btn-danger btn-xs">
+                                        <i class="fa fa-file-pdf-o"> </i>
+                                        Exportar a PDF
+                                    </a>
+                                </div>
+                                <h5 class="text-uppercase">Resultados</h5>
+
+                                <div class="ibox-content table-responsive">
+                                    {% if results %}
+                                        <table id="editable" class="table table-striped table-bordered table-hover">
+                                            <thead>
+                                            <tr>
+                                                <th class="col-lg-1">Carnet</th>
+                                                <th class="col-lg-2">Nombre y Apellidos</th>
+                                                <th class="col-lg-2">Dirección</th>
+                                                <th class="col-lg-1">Sexo</th>
+                                                <th class="col-lg-1">Fecha de Alta</th>
+                                                <th class="col-lg-1">Nivel escolar</th>
+                                                <th class="col-lg-1">Contrato</th>
+                                                <th class="col-lg-1">Cargo</th>
+                                                <th class="col-lg-1">Categoría</th>
+                                                <th class="col-lg-1">Escala Salarial</th>
+                                                <th class="col-lg-3">Entidad</th>
+                                                <th class="col-lg-1">Baja</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for item in results %}
+                                                <tr>
+                                                    <td><a class="info" data-id="{{ item.id }}">{{ item.carnet }}</a></td>
+                                                    <td><a class="info" data-id="{{ item.id }}">{{ item.nombreCompleto }}</a></td>
+                                                    <td><a class="info" data-id="{{ item.id }}">{{ item.direccion }}</a></td>
+                                                    <td><a class="info" data-id="{{ item.id }}">{{ item.sexo?'Hombre':'Mujer' }}</a></td>
+                                                    <td><a class="info" data-id="{{ item.id }}">{{ item.fechaAlta | date('d/m/Y') }}</a></td>
+                                                    <td><a class="info" data-id="{{ item.id }}">{{ item.escolaridad }}</a></td>
+                                                    <td><a class="info" data-id="{{ item.id }}">{{ item.contrato }}</a></td>
+                                                    <td><a class="info" data-id="{{ item.id }}">{{ item.cargo }}</a></td>
+                                                    <td><a class="info" data-id="{{ item.id }}">{{ item.categoria }}</a></td>
+                                                    <td><a class="info" data-id="{{ item.id }}">{{ item.escalaSalarial }}</a></td>
+                                                    <td><a class="info" data-id="{{ item.id }}">{{ item.entidad }}</a></td>
+                                                    <td class="text-center"><a class="info" data-id="{{ item.id }}">{{ item.isBaja?'Si':'No' }}</a></td>
+                                                </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    {% else %}
+                                        <h2 class="text-danger">No se encontraron resultados</h2>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="hidden">
+        {{ form_start(formInfo, {'attr':{'id':'formInfo'}}) }}
+        {{ form_widget(formInfo) }}
+        {{ form_end(formInfo) }}
+    </div>
+{% endblock %}

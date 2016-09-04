@@ -1,0 +1,156 @@
+{% extends 'templates/layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('assets/css/plugins/toastr/toastr.min.css') }}">
+    <link rel="stylesheet"
+          href="{{ asset('assets/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/plugins/select2/select2.min.css') }}">
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('assets/js/plugins/toastr/toastr.min.js') }}"></script>
+    <script src="{{ asset('assets/js/plugins/validate/jquery.validate.min.js') }}"></script>
+    <script src="{{ asset('assets/js/validations/validate.security.user.edit.js') }}"></script>
+    <script src="{{ asset('assets/js/plugins/select2/select2.full.min.js') }}"></script>
+{% endblock %}
+
+{% block breadcrumb %}
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            <h2 class="text-uppercase">editar usuario</h2>
+            <ol class="breadcrumb">
+                <li>
+                    <a href="{{ url('_inicio') }}">Inicio</a>
+                </li>
+                <li>
+                    Seguridad
+                </li>
+                <li>
+                    <a href="{{ url('_seguridad_usuario') }}">Usuarios</a>
+                </li>
+                <li class="active">
+                    <strong>Editar usuario</strong>
+                </li>
+            </ol>
+        </div>
+        <div class="col-lg-2">
+        </div>
+    </div>
+{% endblock %}
+
+{% block body %}
+
+    {# Mensajes #}
+    {% include 'templates/messages.html.twig' %}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5 class="text-uppercase">Editar usuario</h5>
+
+                    <div class="ibox-content">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading text-uppercase">
+                                        actualizar información de usuario
+                                    </div>
+                                    <div class="panel-body">
+                                        {{ form_start(formInfo, {'attr':{'id':'formInfo'}}) }}
+                                        <div class="form-group">
+                                            <label class="control-label">Trabajador</label>
+                                            <select id="idTrabajador" class="form-control" name="idTrabajador"
+                                                    data-selected="{{ entity.trabajador?entity.trabajador.id:'' }}"
+                                                    style="width: 100%">
+                                                <option></option>
+                                                <option value="{{ entity.trabajador.id }}">{{ entity.trabajador.nombreCompleto }}</option>
+                                                {% for item in trabajadores %}
+                                                    <option value="{{ item.id }}">{{ item.nombreCompleto }}</option>
+                                                {% endfor %}
+                                            </select>
+                                            <label id="idTrabajador-error" class="hidden error"
+                                                   for="idTrabajador"></label>
+                                        </div>
+                                        <div class="form-group">
+                                            {{ form_label(formInfo.user, 'Nombre de usuario') }}
+                                            {{ form_widget(formInfo.user, {'attr':{'placeholder':'Usuario'}}) }}
+                                        </div>
+                                        <div class="form-group">
+                                            {% set rolesSelected='' %}
+                                            {% for role in entity.roles %}
+                                                {% if loop.first %}
+                                                    {% set rolesSelected=role.id %}
+                                                {% else %}
+                                                    {% set rolesSelected=rolesSelected~','~role.id %}
+                                                {% endif %}
+                                            {% endfor %}
+                                            <label class="control-label">Roles del usuario</label>
+                                            <select id="rolesSelect" name="rolesSelect" class="form-control"
+                                                    multiple="multiple"
+                                                    data-selected="{{ rolesSelected }}" style="width: 100%">
+                                                {% for item in roles %}
+                                                    <option value="{{ item.id }}">{{ item.nombre }}</option>
+                                                {% endfor %}
+                                            </select>
+                                            <label id="rolesSelect-error" class="hidden error"
+                                                   for="rolesSelect"></label>
+                                            <input class="hidden" type="text" id="roles" name="roles"
+                                                   value="{{ rolesSelected }}"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="checkbox">
+                                                {{ form_widget(formInfo.isActive) }}
+                                                {{ form_label(formInfo.isActive, 'Activo') }}
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <button type="submit" class="btn btn-success btn-sm pull-right"><i
+                                                        class="fa fa-refresh"></i> Actualizar
+                                            </button>
+                                        </div>
+                                        {{ form_end(formInfo) }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading text-uppercase">
+                                        cambiar contraseña de usuario
+                                    </div>
+                                    <div class="panel-body">
+                                        {{ form_start(formPass, {'attr':{'id':'formPass'}}) }}
+                                        <div class="form-group">
+                                            {{ form_label(formPass.password.first, 'Nueva contraseña') }}
+                                            {{ form_widget(formPass.password.first, {'attr':{'placeholder':'Contraseña'}}) }}
+                                        </div>
+                                        <div class="form-group hidden">
+                                            {{ form_widget(formPass) }}
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="pull-right">
+                                                <button id="cancel" data-url="{{ url('_seguridad_usuario') }}"
+                                                        type="button"
+                                                        class="btn btn-default ">
+                                                    <i class="fa fa-times-circle"></i>
+                                                    Cancelar
+                                                </button>
+                                                <button type="submit" class="btn btn-success"><i
+                                                            class="fa fa-refresh"></i> Cambiar
+                                                </button>
+                                            </div>
+                                        </div>
+                                        {{ form_end(formPass) }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

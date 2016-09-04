@@ -1,0 +1,65 @@
+{% extends 'templates/layout.html.twig' %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('assets/js/plugins/validate/jquery.validate.min.js') }}"></script>
+    <script src="{{ asset('assets/js/validations/validate.recep.search.js') }}"></script>
+    <script>
+        $(function () {
+            $('#editable').DataTable({
+                aaSorting: [[1, "asc"]]
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block breadcrumb %}
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            <h2>ESTADO DE TRÁMITE</h2>
+            <ol class="breadcrumb">
+                <li>
+                    <a href="{{ url('_inicio') }}">Inicio</a>
+                </li>
+                <li>
+                    Recepción
+                </li>
+                <li class="active">
+                    <strong>Estado de trámite</strong>
+                </li>
+            </ol>
+        </div>
+        <div class="col-lg-2">
+        </div>
+    </div>
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>BUSCAR TRÁMITE</h5>
+                </div>
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group has-success">
+                            {{ form_start(form, {'action':url('_recepcion_tramite_searching'), 'attr':{'id':'formBuscarTramite'}}) }}
+                                <div class="input-group">
+                                {{ form_widget(form.id, {'attr':{'placeholder':'Número de Carnet'}}) }}
+                                <span class="input-group-btn">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fa fa-search"></i> Buscar
+                                    </button>
+                                </span>
+                                </div>
+                            {{ form_end(form) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

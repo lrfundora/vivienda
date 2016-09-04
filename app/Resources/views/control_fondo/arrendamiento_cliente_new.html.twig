@@ -1,0 +1,184 @@
+{% extends 'templates/layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('assets/css/plugins/toastr/toastr.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/plugins/select2/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/plugins/datapicker/datepicker3.css') }}">
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('assets/js/plugins/toastr/toastr.min.js') }}"></script>
+    <script src="{{ asset('assets/js/plugins/select2/select2.full.min.js') }}"></script>
+    <script src="{{ asset('assets/js/plugins/datapicker/bootstrap-datepicker.js') }}"></script>
+    <script src="{{ asset('assets/js/plugins/validate/jquery.validate.min.js') }}"></script>
+    <script src="{{ asset('assets/js/validations/validate.cf.arrendamiento-cliente.new.js') }}"></script>
+    <script>
+
+    </script>
+{% endblock %}
+
+{% block breadcrumb %}
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            <h2 class="text-uppercase">Nuevo arrendammiento</h2>
+            <ol class="breadcrumb">
+                <li>
+                    <a href="{{ url('_inicio') }}">Inicio</a>
+                </li>
+                <li>
+                    Control de Fondo
+                </li>
+                <li>
+                    <a href="{{ url('_cf_arrendamiento') }}">Arrendamientos</a>
+                </li>
+                <li class="active">
+                    <strong>Nuevo</strong>
+                </li>
+            </ol>
+        </div>
+        <div class="col-lg-2">
+        </div>
+    </div>
+{% endblock %}
+
+{% block body %}
+
+    {# Mensajes #}
+    {% include 'templates/messages.html.twig' %}
+
+    <div class="row">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5 class="text-uppercase">Nuevo arrendammiento</h5>
+
+                <div class="ibox-content">
+
+                    <div class="row">
+                        {{ form_start(form, {'attr':{'id':'form'}}) }}
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <h3 class="text-uppercase text-green">
+                                    datos del arrendatario
+                                </h3>
+                            </div>
+                            <div class="form-group">
+                                <div class="form-group">
+                                    {{ form_label(form.carnet, 'Carnet') }}
+                                    {{ form_widget(form.carnet, {'attr':{'placeholder':'Carnet de identidad'}}) }}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="form-group">
+                                    {{ form_label(form.nombre, 'Nombre') }}
+                                    {{ form_widget(form.nombre, {'attr':{'placeholder':'Nombre'}}) }}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="form-group">
+                                    {{ form_label(form.apellidos, 'Apellidos') }}
+                                    {{ form_widget(form.apellidos, {'attr':{'placeholder':'Apellidos'}}) }}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                {{ form_label(form.direccion, 'Dirección') }}
+                                {{ form_widget(form.direccion, {'attr':{'placeholder':'Dirección particular','rows':'4'}}) }}
+                            </div>
+                        </div>
+
+                        <div class="col-lg-8">
+                            <div class="form-group">
+                                <h3 class="text-uppercase text-green">
+                                    datos del arrendamiento
+                                </h3>
+                            </div>
+                            <div class="row">
+                                {% for item in form.arrendamientos %}
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        {{ form_label(item.numeroRegistro, 'Número de Registro') }}
+                                        {{ form_widget(item.numeroRegistro, {'attr':{'placeholder':'Número de Registro'}}) }}
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-8">
+                                    <div class="form-group">
+                                        {{ form_label(item.resolucion, 'Resolución') }}
+                                        {{ form_widget(item.resolucion, {'attr':{'placeholder':'Resolución'}}) }}
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        {{ form_label(item.expediente, 'Expediente') }}
+                                        {{ form_widget(item.expediente, {'attr':{'placeholder':'Expediente'}}) }}
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Año de Construcción</label>
+                                        {{ form_label(item.anoConstruccion, 'Año de Construcción', {'label_attr':{'class':'hidden'}}) }}
+                                        <br>
+                                        {{ form_widget(item.anoConstruccion, {'attr':{'style':'width:100%' }}) }}
+                                        <label id="cliente_arrendamiento_arrendamientos_0_anoConstruccion-error" class="error hidden"
+                                               for="cliente_arrendamiento_arrendamientos_0_anoConstruccion"></label>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        {{ form_label(item.numeroContrato, 'Número de Contrato') }}
+                                        {{ form_widget(item.numeroContrato, {'attr':{'placeholder':'Número de Contrato'}}) }}
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Estado</label>
+                                        {{ form_label(item.estado, 'Estado', {'label_attr':{'class':'hidden'}}) }}<br>
+                                        {{ form_widget(item.estado, {'attr':{'style':'width:100%' }}) }}
+                                        <label id="cliente_arrendamiento_arrendamientos_0_estado-error" class="error hidden"
+                                               for="cliente_arrendamiento_arrendamientos_0_estado"></label>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-4">
+                                    <div class="form-group" id="data">
+                                        {{ form_label(item.fechaContrato, 'Fecha de Contrato') }}
+                                        <div class="input-group date">
+                                            {{ form_widget(item.fechaContrato, {'attr':{'value': date('now') | date('d/m/Y')}}) }}
+                                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        {{ form_label(item.valor, 'Valor') }}
+                                        {{ form_widget(item.valor, {'attr':{'placeholder':'0.00'}}) }}
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        {{ form_label(item.motivo, 'Motivo') }}
+                                        {{ form_widget(item.motivo, {'attr':{'placeholder':'Escriba aquí el motivo del arrendamiento...','rows':'4'}}) }}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="pull-right">
+                                <button id="cancel" data-url="{{ url('_cf_arrendamiento') }}" type="button"
+                                        class="btn btn-default ">
+                                    <i class="fa fa-times-circle"></i>
+                                    Cancelar
+                                </button>
+                                <button id="send" type="submit" class="btn btn-primary">
+                                    <i class="fa fa-save"></i>
+                                    Guardar
+                                </button>
+                            </div>
+                        </div>
+                        {{ form_end(form) }}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

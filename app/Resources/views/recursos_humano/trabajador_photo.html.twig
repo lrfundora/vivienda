@@ -1,0 +1,167 @@
+{% extends 'templates/layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('assets/css/plugins/toastr/toastr.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/plugins/cropper/cropper.min.css') }}">
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('assets/js/plugins/toastr/toastr.min.js') }}"></script>
+    <script src="{{ asset('assets/js/plugins/cropper/cropper.min.js') }}"></script>
+    <script>
+        $(document).ready(function () {
+            var $image = $(".image-crop > img");
+            $($image).cropper({
+                aspectRatio: 1,
+                preview: ".img-preview",
+                minWidth: 128,
+                minHeight: 128,
+                done: function (data) {
+                    // Output the result data for cropping image.
+                }
+            });
+
+            var $inputImage = $("#inputImage");
+            if (window.FileReader) {
+                $inputImage.change(function () {
+                    var fileReader = new FileReader(),
+                            files = this.files,
+                            file;
+
+                    if (!files.length) {
+                        return;
+                    }
+
+                    file = files[0];
+
+                    if (/^image\/\w+$/.test(file.type)) {
+                        fileReader.readAsDataURL(file);
+                        fileReader.onload = function () {
+                            $inputImage.val("");
+                            $image.cropper("reset", true).cropper("replace", this.result);
+                        };
+                    } else {
+                        showMessage("Por favor, seleccione un archivo de imagem.");
+                    }
+                });
+            } else {
+                $inputImage.addClass("hide");
+            }
+
+            $("#save").click(function () {
+                $('#foto_file').text($image.cropper("getDataURL"));
+                $('#form').submit();
+            });
+
+            $("#zoomIn").click(function () {
+                $image.cropper("zoom", 0.1);
+            });
+
+            $("#zoomOut").click(function () {
+                $image.cropper("zoom", -0.1);
+            });
+
+            $("#rotateLeft").click(function () {
+                $image.cropper("rotate", -90);
+            });
+
+            $("#rotateRight").click(function () {
+                $image.cropper("rotate", 90);
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block breadcrumb %}
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            <h2 class="text-uppercase">subir foto</h2>
+            <ol class="breadcrumb">
+                <li>
+                    <a href="{{ url('_inicio') }}">Inicio</a>
+                </li>
+                <li>
+                    Recursos Humanos
+                </li>
+                <li>
+                    <a href="{{ url('_rh_plantilla') }}">Plantilla laboral</a>
+                </li>
+                <li>
+                    <strong>Trabajador</strong>
+                </li>
+                <li class="active">
+                    <strong>Subir foto</strong>
+                </li>
+            </ol>
+        </div>
+        <div class="col-lg-2">
+        </div>
+    </div>
+{% endblock %}
+
+{% block body %}
+
+    {# Mensajes #}
+    {% include 'templates/messages.html.twig' %}
+
+    <div class="row">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5 class="text-uppercase">{{ entity.nombreCompleto }}</h5>
+
+
+                <div class="ibox-content">
+
+                    <div class="btn-group">
+                        <button title="Aumentar imagen" class="btn btn-white" id="zoomIn"
+                                type="button"><i class="fa fa-search-plus"></i></button>
+                        <button title="Disminuir imagen" class="btn btn-white" id="zoomOut"
+                                type="button"><i class="fa fa-search-minus"></i></button>
+                        <button title="Rotar a izquierda" class="btn btn-white" id="rotateLeft"
+                                type="button"><i class="fa fa-rotate-left"></i></button>
+                        <button title="Rotas a derecha" class="btn btn-white" id="rotateRight"
+                                type="button"><i class="fa fa-rotate-right"></i></button>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="image-crop">
+                                <img src="{{ entity.foto?entity.foto:asset('assets/images/default-user.png') }}">
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <h4>Vista previa</h4>
+
+                            <div class="img-preview img-thumbnail"
+                                 style="width: 128px; height: 128px"></div>
+                            <div>
+
+                                <div class="btn-group">
+                                    <label title="Buscar imagen..." for="inputImage"
+                                           class="btn btn-white">
+                                        <input type="file" accept="image/*" name="file"
+                                               id="inputImage" class="hide">
+                                        Buscar imagen...
+                                    </label>
+                                    <label title="Guardar" id="save" class="btn btn-primary">Guardar</label>
+                                </div>
+
+                                <a href="{{ url('_rh_plantilla') }}" type="button" title="Omitir" id="save" class="btn btn-white">Omitir</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="hidden">
+        {{ form_start(form, {'attr':{'id':'form'}}) }}
+        <input id="id" name="id" type="text" value="{{ entity.id }}"/>
+        {{ form_widget(form) }}
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

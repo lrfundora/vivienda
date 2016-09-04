@@ -1,0 +1,178 @@
+{% extends 'templates/layout.html.twig' %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('assets/js/plugins/jsPDF/dist/jspdf.min.js') }}"></script>
+    <script src="{{ asset('assets/js/plugins/jsPDF/js/basic.js') }}"></script>
+{% endblock %}
+
+{% block breadcrumb %}
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            <h2 class="text-uppercase">información del trabajador</h2>
+            <ol class="breadcrumb">
+                <li>
+                    <a href="{{ url('_inicio') }}">Inicio</a>
+                </li>
+                <li>
+                    Recursos Humanos
+                </li>
+                <li>
+                    <a href="{{ url('_rh_bajas') }}">Bajas laborales</a>
+                </li>
+                <li class="active">
+                    <strong>Información del trabajador</strong>
+                </li>
+            </ol>
+        </div>
+        <div class="col-lg-2">
+        </div>
+    </div>
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="ibox float-e-margins">
+            <div id="pdf" class="ibox-title">
+                <div class="pull-right">
+                    <a href="javascript:ExportToPDFFromHTML('pdf', 'informacion_del_trabajador')"
+                       type="button" class="btn btn-outline btn-danger btn-xs">
+                        <i class="fa fa-file-pdf-o"> </i>
+                        Exportar a PDF
+                    </a>
+                </div>
+
+                <h5 class="text-uppercase">Información del trabajador</h5>
+
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="row">
+                            <div class="col-lg-2">
+                                <img class="img-circle img-responsive center-block"
+                                     src="{{ trabajador.foto?trabajador.foto:asset('assets/images/default-user.png') }}"
+                                     alt="{{ trabajador.nombreCompleto }}" width="150px" height="150px"/>
+                            </div>
+                            <div class="col-lg-3">
+
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <p>Carnet de identidad: <br/>
+                                            <strong>{{ trabajador.carnet }}</strong>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <p>Nombre y Apellidos: <br/>
+                                            <strong>{{ trabajador.nombreCompleto }}</strong>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <p>Dirección particular: <br/>
+                                            <strong>{{ trabajador.direccion }}</strong>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <p>Sexo: <br/>
+                                            <strong>{{ trabajador.sexoString }}</strong>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <p>Fecha de Alta: <br/>
+                                            <strong>{{ trabajador.fechaAlta | date('d/m/Y') }}</strong>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <p>Entidad: <br/>
+                                            <strong>{{ trabajador.entidad?trabajador.entidad.nombre:'Desconocida' }}</strong>
+                                        </p>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-lg-3">
+
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <p>Tipo de contrato: <br/>
+                                            <strong>{{ trabajador.contrato?trabajador.contrato:'Desconocido' }}</strong>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <p>Nivel Escolar: <br/>
+                                            <strong>{{ trabajador.escolaridad?trabajador.escolaridad:'Desconocido' }}</strong>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <p>Categoría Ocupacional: <br/>
+                                            <strong>{{ trabajador.categoria?trabajador.categoria:'Desconocida' }}</strong>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <p>Cargo: <br/>
+                                            <strong>{{ trabajador.cargo?trabajador.cargo:'Desconocido' }}</strong>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <p>Escala Salarial: <br/>
+                                            <strong>{{ trabajador.escalaSalarial?trabajador.escalaSalarial:'Desconocida' }}</strong>
+                                        </p>
+                                    </div>
+                                </div>
+                                {% set integracion='' %}
+                                {% for item in trabajador.integraciones %}
+                                    {% if loop.first %}
+                                        {% set integracion = item.nombre %}
+                                    {% else %}
+                                        {% set integracion = integracion~', '~item.nombre %}
+                                    {% endif %}
+                                {% endfor %}
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <p>Integración Revolucionaria: <br/>
+                                            <strong>{{ integracion?integracion:'Desconocida' }}</strong>
+                                        </p>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-lg-4">
+
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <p>Fecha de Baja: <br/>
+                                            <strong>{{ trabajador.fechaBaja | date('d/m/Y') }}</strong>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <p>Motivo de la Baja: <br/>
+                                            <strong>{{ trabajador.motivoBaja }}</strong>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,143 @@
+{% extends 'templates/layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('assets/css/plugins/toastr/toastr.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/plugins/select2/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/plugins/datapicker/datepicker3.css') }}">
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('assets/js/plugins/toastr/toastr.min.js') }}"></script>
+    <script src="{{ asset('assets/js/plugins/select2/select2.full.min.js') }}"></script>
+    <script src="{{ asset('assets/js/plugins/datapicker/bootstrap-datepicker.js') }}"></script>
+    <script src="{{ asset('assets/js/plugins/validate/jquery.validate.min.js') }}"></script>
+    <script src="{{ asset('assets/js/validations/validate.area-legal.tramite.new.js') }}"></script>
+    <script>
+
+    </script>
+{% endblock %}
+
+{% block breadcrumb %}
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            <h2 class="text-uppercase">nuevo trámite</h2>
+            <ol class="breadcrumb">
+                <li>
+                    <a href="{{ url('_inicio') }}">Inicio</a>
+                </li>
+                <li>
+                    Área Legal
+                </li>
+                <li>
+                    Trámite
+                </li>
+                <li class="active">
+                    <strong>Nuevo</strong>
+                </li>
+            </ol>
+        </div>
+        <div class="col-lg-2">
+        </div>
+    </div>
+{% endblock %}
+
+{% block body %}
+
+    {# Mensajes #}
+    {% include 'templates/messages.html.twig' %}
+
+    <div class="row">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5 class="text-uppercase">nuevo tramite</h5>
+
+                <div class="ibox-content">
+
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <h3 class="text-uppercase text-green">
+                                    datos del cliente
+                                </h3>
+                            </div>
+                            <div class="form-group">
+
+                                <label>Carnet</label>
+                                <input class="form-control" type="text" value="{{ cliente.carnet }}" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label>Nombre y Apellidos</label>
+                                <input class="form-control" type="text" value="{{ cliente.nombreCompleto }}" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label>Dirección</label>
+                                <textarea class="form-control" disabled>{{ cliente.direccion }}</textarea>
+                            </div>
+                        </div>
+                        <div class="col-lg-8">
+                            <div class="form-group">
+                                <h3 class="text-uppercase text-green">
+                                    datos del trámite
+                                </h3>
+                            </div>
+                            {{ form_start(form, {'attr':{'id':'form'}}) }}
+
+                            <input id="id" name="id" class="hidden" type="text" value="{{ cliente.id }}">
+                            {% if not is_granted('ROLE_ABOGADO') %}
+                                <div class="form-group">
+                                    <label class="control-label">Abogado</label>
+                                    <select name="idAbogado" id="idAbogado" class="form-control" {{ abogados|length==0?'disabled':'' }}>
+                                        <option value=""></option>
+                                        {% for item in abogados %}
+                                            <option value="{{ item.id }}">{{ item.nombreCompleto }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <label id="idAbogado-error" for="idAbogado" class="error {{ abogados|length==0?'':'hidden' }}">
+                                        {{ abogados|length==0?'No hay abogados disponibles':'hidden' }}
+                                    </label>
+                                </div>
+                            {% endif %}
+                            <div id="date_range" class="form-group">
+                                <label class="control-label">Período del trámite</label>
+                                <div class="input-daterange input-group" id="datepicker">
+                                    <span class="input-group-addon">Entrada: </span>
+                                    {{ form_label(form.fechaEntrada, 'Fecha de Entrada', {'label_attr':{'class':'hidden'}}) }}
+                                    {{ form_widget(form.fechaEntrada, {'attr':{'value': date('now') | date('d/m/Y')}}) }}
+                                    <label id="tramite_fechaEntrada-error" class="error hidden"></label>
+                                    <span class="input-group-addon"> Vencimiento: </span>
+                                    {{ form_label(form.fechaVencimiento, 'Fecha de Vencimiento', {'label_attr':{'class':'hidden'}}) }}
+                                    {{ form_widget(form.fechaVencimiento, {'attr':{'value': date('60 days') | date('d/m/Y')}}) }}
+                                    <label id="tramite_fechaVencimiento-error" class="error hidden"></label>
+                                </div>
+                                <label id="checkdate" class="error hidden">La fecha de entrada del trámite tiene que ser menor a la fecha de vencimiento.</label>
+                            </div>
+                            <div class="form-group">
+                                {{ form_label(form.descripcion, 'Descripción') }}
+                                {{ form_widget(form.descripcion, {'attr':{'placeholder':'Escriba aquí la descripción del trámite','rows':'6'}}) }}
+                            </div>
+                            <div class="hidden">
+                                {{ form_widget(form) }}
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="pull-right">
+                                <button id="cancel" data-url="{{ url('_arealegal_tramite') }}" type="button" class="btn btn-default ">
+                                    <i class="fa fa-times-circle"></i>
+                                    Cancelar
+                                </button>
+                                <button id="send" type="submit" class="btn btn-primary" {{ abogados|length==0 and not is_granted('ROLE_ABOGADO')?'disabled':'' }}>
+                                    <i class="fa fa-save"></i>
+                                    Guardar
+                                </button>
+                            </div>
+                        </div>
+                        {{ form_end(form) }}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

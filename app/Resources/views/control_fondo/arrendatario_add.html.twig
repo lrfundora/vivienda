@@ -1,0 +1,114 @@
+{% extends 'templates/layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('assets/css/plugins/toastr/toastr.min.css') }}">
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('assets/js/plugins/toastr/toastr.min.js') }}"></script>
+    <script src="{{ asset('assets/js/plugins/validate/jquery.validate.min.js') }}"></script>
+    <script src="{{ asset('assets/js/validations/validate.cf.cliente.new.js') }}"></script>
+    <script>
+
+    </script>
+{% endblock %}
+
+{% block breadcrumb %}
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            <h2 class="text-uppercase">Agregar arrendatario</h2>
+            <ol class="breadcrumb">
+                <li>
+                    <a href="{{ url('_inicio') }}">Inicio</a>
+                </li>
+                <li>
+                    Control de Fondo
+                </li>
+                <li>
+                    <a href="{{ url('_cf_arrendamiento') }}">Arrendamientos</a>
+                </li>
+                <li>
+                    Arrendatario
+                </li>
+                <li class="active">
+                    <strong>Agregar</strong>
+                </li>
+            </ol>
+        </div>
+        <div class="col-lg-2">
+        </div>
+    </div>
+{% endblock %}
+
+{% block body %}
+
+    {# Mensajes #}
+    {% include 'templates/messages.html.twig' %}
+
+    <div class="row">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5 class="text-uppercase">Agregar arrendatario</h5>
+
+                <div class="ibox-content">
+
+                    <div class="row">
+                        <div class="col-lg-4"></div>
+                        <div class="col-lg-4">
+                            <div class="alert alert-info">
+                                <i class="fa fa-question-circle"></i>
+                                ¿Está seguro(a) de agregar otro arrendatario al arrendamiento?
+                            </div>
+
+                            <div class="form-group">
+                                <div class="form-group">
+                                    <label>Carnet</label>
+                                    <input class="form-control" type="text" value="{{ entity.carnet }}" disabled>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="form-group">
+                                    <label>Nombre</label>
+                                    <input class="form-control" type="text" value="{{ entity.nombre }}" disabled>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="form-group">
+                                    <label>Apellidos</label>
+                                    <input class="form-control" type="text" value="{{ entity.apellidos }}" disabled>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Dirección</label>
+                                <textarea class="form-control" rows="3" disabled>{{ entity.direccion }}</textarea>
+                            </div>
+                            {{ form_start(form, {'attr':{'id':'form'}}) }}
+                            <div class="hidden">
+                                <input id="idArrendamiento" name="idArrendamiento" type="text" value="{{ idArrendamiento }}">
+                                <input id="id" name="id" type="text" value="{{ entity.id }}">
+                                {{ form_widget(form) }}
+                            </div>
+                            <div class="form-group pull-right">
+                                <button id="cancel" data-url="{{ url('_cf_arrendamiento') }}" type="button"
+                                        class="btn btn-default ">
+                                    <i class="fa fa-times-circle"></i>
+                                    Cancelar
+                                </button>
+
+                                <button id="send" type="submit" class="btn btn-primary">
+                                    <i class="fa fa-save"></i>
+                                    Agregar
+                                </button>
+                            </div>
+                            {{ form_end(form) }}
+                        </div>
+                        <div class="col-lg-4"></div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

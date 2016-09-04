@@ -1,0 +1,130 @@
+{% extends 'templates/layout.html.twig' %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('assets/js/plugins/validate/jquery.validate.min.js') }}"></script>
+    <script src="{{ asset('assets/js/validations/validate.area-legal.tramite.com.js') }}"></script>
+{% endblock %}
+
+{% block breadcrumb %}
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            <h2 class="text-uppercase">comentar trámite</h2>
+            <ol class="breadcrumb">
+                <li>
+                    <a href="{{ url('_inicio') }}">Inicio</a>
+                </li>
+                <li>
+                    Área Legal
+                </li>
+                <li>
+                    Trámite
+                </li>
+                <li class="active">
+                    <strong>Comentar</strong>
+                </li>
+            </ol>
+        </div>
+        <div class="col-lg-2">
+        </div>
+    </div>
+{% endblock %}
+
+{% block body %}
+
+    <div class="row">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5 class="text-uppercase">Comentar tramite</h5>
+
+                <div class="ibox-content">
+
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <h3 class="text-uppercase text-green">
+                                    datos del cliente
+                                </h3>
+                            </div>
+                            <div class="form-group">
+
+                                <label>Carnet</label>
+                                <input class="form-control" type="text" value="{{ tramite.cliente.carnet }}" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label>Nombre y Apellidos</label>
+                                <input class="form-control" type="text" value="{{ tramite.cliente.nombreCompleto }}"
+                                       disabled>
+                            </div>
+                            <div class="form-group">
+                                <label>Nombre y Apellidos</label>
+                                <textarea class="form-control" rows="4"
+                                          disabled>{{ tramite.cliente.direccion }}</textarea>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-8">
+                            <div class="form-group">
+                                <h3 class="text-uppercase text-green">
+                                    datos del trámite
+                                </h3>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-5">
+                            <div class="form-group">
+                                <label class="control-label">Abogado</label>
+                                <input class="form-control" type="text" value="{{ tramite.trabajador.nombreCompleto }}"
+                                       disabled>
+                            </div>
+                            <div id="date_range" class="form-group">
+                                <label class="control-label">Período del trámite</label>
+
+                                <div class="input-group">
+                                    <span class="input-group-addon">Entrada: </span>
+                                    <input class="form-control" type="text"
+                                           value="{{ tramite.fechaEntrada | date('d/m/Y') }}" disabled>
+                                    <span class="input-group-addon"> Vencimiento: </span>
+                                    <input class="form-control" type="text"
+                                           value="{{ tramite.fechaVencimiento | date('d/m/Y') }}" disabled>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">Descripción</label>
+                                <textarea class="form-control" rows="4" disabled>{{ tramite.descripcion }}</textarea>
+                            </div>
+
+                        </div>
+
+                        <div class="col-lg-4">
+                            {{ form_start(form, {'attr':{'id':'form'}}) }}
+                            <input id="id" name="id" class="hidden" type="text" value="{{ tramite.id }}">
+                            <div class="form-group">
+                                {{ form_label(form.comentario, 'Comentario') }}
+                                {{ form_widget(form.comentario, {'attr':{'placeholder':'Escriba aquí el comentario del trámite','rows':'11'}}) }}
+                            </div>
+                            <div class="hidden">
+                                {{ form_widget(form) }}
+                            </div>
+                        </div>
+
+                        <div class="col-lg-12">
+                            <div class="pull-right">
+                                <button id="cancel" data-url="{{ url('_arealegal_tramite') }}" type="button" class="btn btn-default ">
+                                    <i class="fa fa-times-circle"></i>
+                                    Cancelar
+                                </button>
+                                <button type="submit" class="btn btn-success">
+                                    <i class="fa fa-refresh"></i>
+                                    Actualizar
+                                </button>
+                            </div>
+                        </div>
+                        {{ form_end(form) }}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

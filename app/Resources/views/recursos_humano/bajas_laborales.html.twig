@@ -1,0 +1,114 @@
+{% extends 'templates/layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('assets/css/plugins/toastr/toastr.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/plugins/dataTables/datatables.min.css') }}">
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('assets/js/plugins/toastr/toastr.min.js') }}"></script>
+    <script src="{{ asset('assets/js/plugins/jsPDF/dist/jspdf.min.js') }}"></script>
+    <script src="{{ asset('assets/js/plugins/jsPDF/js/basic.js') }}"></script>
+    <script src="{{ asset('assets/js/plugins/dataTables/datatables.min.js') }}"></script>
+    <script src="{{ asset('assets/js/plugins/jeditable/jquery.jeditable.js') }}"></script>
+    <script>
+        $(function () {
+            $('#editable').DataTable({
+                aaSorting: [[2, "asc"]]
+            });
+            $('a[type="button"]').on('click', function(e){
+                $('input[id*="_id"]').val($(this).attr('data-item'));
+                $('#form').submit();
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block breadcrumb %}
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            <h2 class="text-uppercase">bajas laborales</h2>
+            <ol class="breadcrumb">
+                <li>
+                    <a href="{{ url('_inicio') }}">Inicio</a>
+                </li>
+                <li>
+                    Recursos Humanos
+                </li>
+                <li class="active">
+                    <strong>Bajas laborales</strong>
+                </li>
+            </ol>
+        </div>
+        <div class="col-lg-2">
+        </div>
+    </div>
+{% endblock %}
+
+{% block body %}
+
+    {# Mensajes #}
+    {% include 'templates/messages.html.twig' %}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5 class="text-uppercase">bajas laborales</h5>
+
+                    <div class="ibox-content table-responsive">
+                        <table id="editable" class="table table-striped table-bordered table-hover">
+                            <thead>
+                            <tr>
+                                <th class="col-lg-1 text-center">Foto</th>
+                                <th class="col-lg-1">Carnet</th>
+                                <th class="col-lg-2">Nombre y Apellidos</th>
+                                <th class="col-lg-2">Cargo</th>
+                                <th class="col-lg-1">Fecha de Baja</th>
+                                <th class="col-lg-4">Motivo de Baja</th>
+                                <th class="col-lg-1 text-center">Acciones</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for item in trabajadores %}
+                                <tr>
+                                    <td class="text-center">
+                                        <img class="circle-border" width="48px" height="48px"
+                                             src=" {{ item.foto?item.foto:asset('assets/images/default-user.png') }}"
+                                             alt="">
+                                    </td>
+                                    <td>{{ item.carnet }}</td>
+                                    <td>{{ item.nombreCompleto }}</td>
+                                    <td>{{ item.cargo.nombre }}</td>
+                                    <td>{{ item.fechaBaja | date('d/m/Y') }}</td>
+                                    <td>{{ item.motivoBaja | truncate(120, true) }}</td>
+                                    <td class="text-center">
+                                        <div class="tooltip-demo">
+                                            <a type="button" class="btn btn-outline btn-info" data-item="{{ item.id }}"
+                                               data-toggle="tooltip" data-placement="top"
+                                               title="Información del trabajador">
+                                                <i class="fa fa-info-circle"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {#Form Bajas Info#}
+    <div class="hidden">
+        {{ form_start(form, {'attr':{'id':'form'}}) }}
+        {{ form_widget(form) }}
+        {{ form_end(form) }}
+    </div>
+    {#/Form Bajas Info#}
+
+{% endblock %}

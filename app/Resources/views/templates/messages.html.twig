@@ -1,0 +1,72 @@
+{% for msgInfo in app.session.flashbag.get('info') %}
+    <div id="msgInfo" class="hidden" data-msg="{{ msgInfo }}"></div>
+    <script>
+        success();
+        function success() {
+            setTimeout(function () {
+                initToastr();
+                toastr.info($('#msgInfo').data('msg'), 'INFORMACIÓN');
+            }, 1000);
+        }
+    </script>
+{% endfor %}
+
+{% for msgSuccess in app.session.flashbag.get('success') %}
+    <div id="msgSuccess" class="hidden" data-msg="{{ msgSuccess }}"></div>
+    <script>
+        success();
+        function success() {
+            setTimeout(function () {
+                initToastr();
+                toastr.success($('#msgSuccess').data('msg'), 'ÉXITO');
+            }, 1000);
+        }
+    </script>
+{% endfor %}
+
+{% for msgWarning in app.session.flashbag.get('warning') %}
+    <div id="msgWarning" class="hidden" data-msg="{{ msgWarning }}"></div>
+    <script>
+        error();
+        function error() {
+            setTimeout(function () {
+                initToastr();
+                toastr.warning($('#msgWarning').data('msg'), 'ADVERTENCIA');
+            }, 1000);
+        }
+    </script>
+{% endfor %}
+
+{% for msgError in app.session.flashbag.get('error') %}
+    <div id="msgError" class="hidden" data-msg="{{ msgError }}"></div>
+    <script>
+        error();
+        function error() {
+            setTimeout(function () {
+                initToastr();
+                toastr.error($('#msgError').data('msg'), 'ERROR');
+            }, 1000);
+        }
+    </script>
+{% endfor %}
+
+<script>
+    function initToastr() {
+        toastr.options = {
+            "closeButton": true,
+            "debug": false,
+            "progressBar": true,
+            "preventDuplicates": false,
+            "positionClass": "toast-top-right",
+            "onclick": null,
+            "showDuration": "400",
+            "hideDuration": "1000",
+            "timeOut": "7000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+    }
+</script>

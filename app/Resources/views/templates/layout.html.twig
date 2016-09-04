@@ -1,0 +1,233 @@
+{% extends 'templates/base.html.twig' %}
+
+{% block design %}
+    <div id="wrapper">
+
+        <nav class="navbar-default navbar-static-side" role="navigation">
+            <div class="sidebar-collapse">
+                <ul class="nav metismenu" id="side-menu">
+                    <li class="nav-header">
+                        <div class="dropdown profile-element"> <span>
+                            <img alt="image" class="img-circle" width="48px" height="48px"
+                                 src="
+                                 {% if app.user.trabajador %}
+                                    {{ app.user.trabajador.foto?app.user.trabajador.foto:asset('assets/images/default-user.png') }}
+                                 {% else %}
+                                    {{ asset('assets/images/default-user.png') }}
+                                 {% endif %}
+                                 "/>
+                             </span>
+                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                            <span class="clear">
+                               <span class="block">
+                                   <strong class="font-bold">
+                                       <small>
+                                           {% if app.user=='admin' %}
+                                               Administrador
+                                           {% else %}
+                                               {{ app.user.trabajador?app.user.trabajador.nombreCompleto:'Desconocido' }}
+                                           {% endif %}
+                                       </small>
+                                   </strong>
+                               </span>
+                               <span class="text-muted block">
+                                   <small>
+                                       {% if app.user=='admin' %}
+                                           Administrador del sistema
+                                       {% else %}
+                                           {% if app.user.trabajador %}
+                                               {{ app.user.trabajador.cargo?app.user.trabajador.cargo.nombre:'Desconocido' }}
+                                           {% else %}
+                                               Desconocido
+                                           {% endif %}
+                                       {% endif %}
+                                   </small>
+                                   <b class="caret"></b></span> </span> </a>
+                            <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                                <li>
+                                    <a type="button" id="btn_changePass">
+                                        Cambiar contraseña
+                                    </a>
+
+                                    <div class="hidden">
+                                        <form id="changePass" name="changePass"
+                                              action="{{ url('_seguridad_usuario_change_pass') }}" method="post">
+                                            <input id="changePass_id" name="changePass_id" type="text"
+                                                   value="{{ app.user.id }}">
+                                        </form>
+                                    </div>
+                                </li>
+                                <li class="divider"></li>
+                                <li><a href="{{ url('logout') }}">Salir</a></li>
+                            </ul>
+                        </div>
+                        <div class="logo-element">
+                            <img class="img img-responsive" src="{{ asset('assets/images/logo.png') }}" alt="VIVIENDA"
+                                 width="64px" style="padding: 10px">
+                        </div>
+                    </li>
+                    {% if not is_granted('ROLE_RECEPCION') %}
+                        <li {{ menu=='inicio'?'class="active"':'' }}>
+                            <a href="{{ url('_inicio') }}"><i class="fa fa-th-large"></i> <span
+                                        class="nav-label">INICIO</span></a>
+                        </li>
+                    {% endif %}
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <li {{ menu=='seguridad'?'class="active"':'' }}>
+                            <a href="#"><i class="fa fa-lock"></i> <span class="nav-label">SEGURIDAD</span><span
+                                        class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level collapse">
+                                <li {{ submenu=='seguridad_log'?'class="active"':'' }}>
+                                    <a href="{{ url('_seguridad_log') }}">Trazas</a>
+                                </li>
+                                <li {{ submenu=='seguridad_usuario'?'class="active"':'' }}>
+                                    <a href="{{ url('_seguridad_usuario') }}">Usuarios</a>
+                                </li>
+                                <li {{ submenu=='seguridad_entidad'?'class="active"':'' }}>
+                                    <a href="{{ url('_seguridad_entidad') }}">Entidades</a>
+                                </li>
+                            </ul>
+                        </li>
+                    {% endif %}
+                    {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_DIRECTOR') or is_granted('ROLE_RECEPCION') %}
+                        <li {{ menu=='recepcion'?'class="active"':'' }}>
+                            <a href="#"><i class="fa fa-search"></i> <span class="nav-label">RECEPCIÓN</span><span
+                                        class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level collapse">
+                                <li {{ submenu=='recepcion_tramite'?'class="active"':'' }}><a
+                                            href="{{ url('_recepcion_tramite') }}">Estado de trámite</a></li>
+                                <li {{ submenu=='recepcion_guia'?'class="active"':'' }}><a
+                                            href="{{ url('_recepcion_guia') }}">Guía telefónica</a></li>
+                            </ul>
+                        </li>
+                    {% endif %}
+                    {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_DIRECTOR') or is_granted('ROLE_ABOGADO') %}
+                        <li {{ menu=='area'?'class="active"':'' }}>
+                            <a href="#"><i class="fa fa-group"></i> <span class="nav-label">ÁREA LEGAL</span><span
+                                        class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level collapse">
+                                <li {{ submenu=='area_cliente'?'class="active"':'' }}><a
+                                            href="{{ url('_arealegal_cliente') }}">Clientes</a></li>
+                                <li {{ submenu=='area_tramite'?'class="active"':'' }}><a
+                                            href="{{ url('_arealegal_tramite') }}">Trámites vigentes</a></li>
+                                <li {{ submenu=='area_tramite_baja'?'class="active"':'' }}><a
+                                            href="{{ url('_arealegal_tramite_baja') }}">Trámites finalizados</a></li>
+                            </ul>
+                        </li>
+                    {% endif %}
+                    {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_DIRECTOR') or is_granted('ROLE_CF') %}
+                        <li {{ menu=='cf'?'class="active"':'' }}>
+                            <a href="#"><i class="fa fa-line-chart"></i> <span
+                                        class="nav-label">CONTROL DE FONDO</span><span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level collapse">
+                                <li {{ submenu=='cf_pago'?'class="active"':'' }}>
+                                    <a href="{{ url('_cf_pagos') }}">Pagos</a></li>
+                                <li {{ submenu=='cf_arrendamiento'?'class="active"':'' }}>
+                                    <a href="{{ url('_cf_arrendamiento') }}">Arrendamientos</a></li>
+                                <li {{ submenu=='cf_bajas'?'class="active"':'' }}>
+                                    <a href="{{ url('_cf_bajas') }}">Arrendamientos bajas</a></li>
+                            </ul>
+                        </li>
+                    {% endif %}
+                    {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_DIRECTOR') or is_granted('ROLE_RH') %}
+                        <li {{ menu=='rh'?'class="active"':'' }}>
+                            <a href="#"><i class="fa fa-group"></i> <span class="nav-label">RECURSOS HUMANOS</span><span
+                                        class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level collapse">
+                                {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_JRH') %}
+                                    <li {{ submenu=='rh_constantes'?'class="active"':'' }}>
+                                        <a href="{{ url('_rh_constantes') }}">Constantes</a>
+                                    </li>
+                                {% endif %}
+                                <li {{ submenu=='rh_bajas'?'class="active"':'' }}>
+                                    <a href="{{ url('_rh_bajas') }}">Bajas laborales</a>
+                                </li>
+                                <li {{ submenu=='rh_plantilla'?'class="active"':'' }}>
+                                    <a href="{{ url('_rh_plantilla') }}">Plantilla laboral</a>
+                                </li>
+                            </ul>
+                        </li>
+                    {% endif %}
+                    {% if not is_granted('ROLE_RECEPCION') %}
+                        <li {{ menu=='reportes'?'class="active"':'' }}>
+                            <a href="#"><i class="fa fa-bar-chart-o"></i> <span
+                                        class="nav-label">REPORTES</span><span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level collapse">
+                                {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_DIRECTOR') or is_granted('ROLE_ABOGADO') %}
+                                    <li {{ submenu=='reportes_al'?'class="active"':'' }}><a
+                                                href="{{ url('_reportes_al') }}">Área
+                                            Legal</a></li>
+                                {% endif %}
+                                {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_DIRECTOR') or is_granted('ROLE_CF') %}
+                                    <li {{ submenu=='reportes_cf'?'class="active"':'' }}><a
+                                                href="{{ url('_reportes_cf') }}">Control
+                                            de Fondo</a></li>
+                                {% endif %}
+                                {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_DIRECTOR') or is_granted('ROLE_RH') %}
+                                    <li {{ submenu=='reportes_rh'?'class="active"':'' }}><a
+                                                href="{{ url('_reportes_rh') }}">Recursos
+                                            Humanos</a></li>
+                                {% endif %}
+                            </ul>
+                        </li>
+                    {% endif %}
+                    <li {{ menu=='logout'?'class="active"':'' }}>
+                        <a href="{{ url('logout') }}"><i class="fa fa-sign-out"></i> <span
+                                    class="nav-label">SALIR</span></a>
+                    </li>
+                </ul>
+
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="gray-bg">
+            <div class="row border-bottom">
+                <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+                    <div class="navbar-header">
+                        <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i
+                                    class="fa fa-bars"></i> </a>
+                        <div class="text-uppercase" style="padding-top: 20px; width: 428px">
+                            <span class="m-r-sm text-muted">
+                                <strong>Sistema de Gestión de Información de la Vivienda</strong>
+                            </span>
+                        </div>
+                    </div>
+                    <ul class="nav navbar-top-links navbar-right">
+                        <li>
+                            <a href="{{ url('_recepcion_guia') }}">
+                                <i class="fa fa-tty"></i>
+                                <small>Guía telefónica</small>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ url('logout') }}">
+                                <i class="fa fa-sign-out"></i> Salir
+                            </a>
+                        </li>
+                    </ul>
+
+                </nav>
+            </div>
+
+            {% block breadcrumb %}{% endblock %}
+
+            <div class="wrapper wrapper-content animated fadeInRight">
+                {% block body %}{% endblock %}
+            </div>
+
+            <!-- Footer-->
+            <div class="footer">
+                <div class="pull-right">
+                    v1.0
+                </div>
+
+                <div>
+                    VIVIENDA &copy;
+                    {% if 'now'|date('Y') <= 2016 %}2016{% else %}2016 - {{ 'now'|date('Y') }}{% endif %}.
+                    Todos los derechos reservados.
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}

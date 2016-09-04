@@ -1,0 +1,133 @@
+{% extends 'templates/layout.html.twig' %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script src="{{ asset('assets/js/plugins/validate/jquery.validate.min.js') }}"></script>
+    <script src="{{ asset('assets/js/validations/validate.recep.search.js') }}"></script>
+{% endblock %}
+
+{% block breadcrumb %}
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            <h2>ESTADO DE TRÁMITE</h2>
+            <ol class="breadcrumb">
+                <li>
+                    <a href="{{ url('_inicio') }}">Inicio</a>
+                </li>
+                <li>
+                    Recepción
+                </li>
+                <li class="active">
+                    <strong>Estado de trámite</strong>
+                </li>
+            </ol>
+        </div>
+        <div class="col-lg-2">
+        </div>
+    </div>
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>BUSCAR TRÁMITE</h5>
+                </div>
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group has-success">
+                                {{ form_start(form, {'attr':{'id':'formBuscarTramite'}}) }}
+                                <div class="input-group">
+                                    {{ form_widget(form.id, {'attr':{'placeholder':'Número de Carnet'}}) }}
+                                    <span class="input-group-btn">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fa fa-search"></i> Buscar
+                                    </button>
+                                </span>
+                                </div>
+                                {{ form_end(form) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    {% if cliente %}
+                        <div class="col-lg-12">
+                            <div class="ibox-content">
+                                <h3 class="text-green">
+                                    <span class="text-uppercase text-muted">id: </span>
+                                    {{ cliente.carnet }}
+                                    <span class="text-uppercase text-muted"> cliente: </span>
+                                    {{ cliente.nombreCompleto }}
+                                </h3>
+
+                                <div class="table-responsive">
+                                    <table id="editable" class="table table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th class="col-lg-2">Abogado</th>
+                                            <th class="col-lg-1">Iniciado</th>
+                                            <th class="col-lg-4">Descripción</th>
+                                            <th class="col-lg-3">Comentario</th>
+                                            <th class="col-lg-2">Estado</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for item in cliente.tramites %}
+                                            <tr>
+                                                <td>{{ item.trabajador.nombreCompleto }}</td>
+                                                <td>{{ item.fechaEntrada | date ('d/m/Y') }}</td>
+                                                <td>{{ item.descripcion }}</td>
+                                                <td>
+                                                    {% if item.comentario!='' %}
+                                                        <span class="text-danger">{{ item.comentario }}</span>
+                                                    {% else %}
+                                                        <span class="text-muted">Sin comentario</span>
+                                                    {% endif %}
+                                                </td>
+                                                <td>
+                                                    {% if item.isCompletado %}
+                                                        <div class="text-success">
+                                                            <i class="fa fa-check-square-o"></i> Finalizado
+                                                        </div>
+                                                    {% else %}
+                                                        {% if item.fechaVencimiento | dateCompare()<0 %}
+                                                            <div class="text-danger">
+                                                                <i class="fa fa-warning"></i>
+                                                                Vencido
+                                                                (por {{ item.fechaVencimiento | dateCompare()*(-1) }}
+                                                                días)
+                                                            </div>
+                                                        {% else %}
+                                                            <div class="text-green">
+                                                                <i class="fa fa-clipboard"></i>
+                                                                En termino
+                                                                (por {{ item.fechaVencimiento | dateCompare() }} días)
+                                                            </div>
+                                                        {% endif %}
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="col-lg-12">
+                            <div class="ibox-content">
+                                <h2>No se encontraron resultados...</h2>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,190 @@
+{% extends 'templates/layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('assets/css/plugins/toastr/toastr.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/plugins/dataTables/datatables.min.css') }}">
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('assets/js/plugins/toastr/toastr.min.js') }}"></script>
+    <script src="{{ asset('assets/js/plugins/validate/jquery.validate.min.js') }}"></script>
+    <script src="{{ asset('assets/js/validations/validate.rh.plantilla.trab.js') }}"></script>
+    <script src="{{ asset('assets/js/plugins/dataTables/datatables.min.js') }}"></script>
+    <script src="{{ asset('assets/js/plugins/jeditable/jquery.jeditable.js') }}"></script>
+    <script>
+        $(function () {
+            $('#editable').DataTable({
+                aaSorting: [[2, "asc"]]
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block breadcrumb %}
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            <h2 class="text-uppercase">plantilla laboral</h2>
+            <ol class="breadcrumb">
+                <li>
+                    <a href="{{ url('_inicio') }}">Inicio</a>
+                </li>
+                <li>
+                    Recursos Humanos
+                </li>
+                <li class="active">
+                    <strong>Plantilla laboral</strong>
+                </li>
+            </ol>
+        </div>
+        <div class="col-lg-2">
+        </div>
+    </div>
+{% endblock %}
+
+{% block body %}
+
+    {# Mensajes #}
+    {% include 'templates/messages.html.twig' %}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5 class="text-uppercase">plantilla laboral</h5>
+                    {# Agragar Trabajador #}
+                    {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_RH') %}
+                        <a href="{{ url('_rh_plantilla_trab_add') }}" type="button"
+                           class="btn btn-outline btn-primary btn-sm pull-right add">
+                            <i class="fa fa-plus"></i>
+                            Nuevo trabajador
+                        </a>
+                    {% endif %}
+                    {# /Agragar Trabajador #}
+                    <div class="ibox-content table-responsive">
+                        <table id="editable" class="table table-striped table-bordered table-hover">
+                            <thead>
+                            <tr>
+                                <th class="col-lg-1 text-center">Foto</th>
+                                <th class="col-lg-1">Carnet</th>
+                                <th class="col-lg-2">Nombre y Apellidos</th>
+                                <th class="col-lg-3">Dirección</th>
+                                <th class="col-lg-1">Sexo</th>
+                                <th class="col-lg-1">Cargo</th>
+                                <th class="col-lg-1">Salario</th>
+                                <th class="col-lg-2 text-center">Acciones</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for item in trabajadores %}
+                                <tr>
+                                    <td class="text-center">
+                                        {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_RH') %}
+                                            <form action="{{ url('_rh_plantilla_trab_photo') }}" method="post">
+                                                <input id="id" name="id" class="hidden" type="text"
+                                                       value="{{ item.id }}"/>
+                                                <button type="submit" class="btn btn-link photo">
+                                                    <img class="img-circle img-responsive center-block"
+                                                         width="36px" height="36px"
+                                                         src="{{ item.foto?item.foto:asset('assets/images/default-user.png') }}"
+                                                         alt="{{ item.nombreCompleto }}"/>
+                                                </button>
+                                            </form>
+                                        {% else %}
+                                            <img class="img-circle img-responsive center-block"
+                                                 width="36px" height="36px"
+                                                 src="{{ item.foto?item.foto:asset('assets/images/default-user.png') }}"
+                                                 alt="{{ item.nombreCompleto }}"/>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ item.carnet }}</td>
+                                    <td>{{ item.nombreCompleto }}</td>
+                                    <td>{{ item.direccion | truncate(120, true) }}</td>
+                                    <td class="center">{{ item.sexoString }}</td>
+                                    <td>{{ item.cargo }}</td>
+                                    <td class="center">{{ item.escalaSalarial }}</td>
+                                    <td class="text-center">
+                                        <div class="tooltip-demo">
+                                            <div class="btn-group">
+                                                <a type="button" class="btn btn-sm btn-outline btn-info"
+                                                   data-item="{{ item.id }}"
+                                                   data-toggle="tooltip" data-placement="top"
+                                                   title="Información del trabajador">
+                                                    <i class="fa fa-info-circle"></i>
+                                                </a>
+                                                {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_RH') %}
+                                                    <a type="button" class="btn btn-sm btn-outline btn-success edit"
+                                                       data-item="{{ item.id }}"
+                                                       data-toggle="tooltip" data-placement="top"
+                                                       title="Editar trabajador">
+                                                        <i class="fa fa-clipboard"></i>
+                                                    </a>
+                                                    <a type="button" class="btn btn-sm btn-outline btn-danger delete"
+                                                       data-toggle="modal"
+                                                       data-target="#ModalDelete"
+                                                       data-name="{{ item.nombreCompleto }}"
+                                                       data-item="{{ item.id }}">
+                                                        <i class="fa fa-minus-circle"></i>
+                                                        Dar baja
+                                                    </a>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {#Form Trabajador Info#}
+    <div class="hidden">
+        {{ form_start(formInfo, {'attr':{'id':'formInfo'}}) }}
+        {{ form_widget(formInfo) }}
+        {{ form_end(formInfo) }}
+    </div>
+    {#/Form Trabajador Info#}
+
+    {#Form Trabajador Edit#}
+    <div class="hidden">
+        {{ form_start(formEdit, {'attr':{'id':'formEdit'}}) }}
+        {{ form_widget(formEdit) }}
+        {{ form_end(formEdit) }}
+    </div>
+    {#/Form Trabajador Edit#}
+
+    {# Modal Dar Baja #}
+    <div class="modal inmodal fade" id="ModalDelete" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span
+                                aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h5 id="delete_title" class="modal-title text-danger">¿ESTÁ SEGURO?</h5>
+                </div>
+                {{ form_start(formBaja, {'attr':{'id':'formBaja'}}) }}
+                <div class="modal-body">
+                    <p id="delete_text" class="font-bold"></p>
+                    {{ form_label(formBaja.motivoBaja, 'Escriba el motivo de la baja') }}
+                    {{ form_widget(formBaja.motivoBaja) }}
+                    <div class="hidden">
+                        {{ form_widget(formBaja) }}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">No, Cancelar</button>
+                    <button type="submit" class="btn btn-danger">Si, Dar baja</button>
+                </div>
+                {{ form_end(formBaja) }}
+            </div>
+        </div>
+    </div>
+    {# /Modal Dar Baja #}
+
+{% endblock %}

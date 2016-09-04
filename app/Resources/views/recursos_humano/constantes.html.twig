@@ -1,0 +1,888 @@
+{% extends 'templates/layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('assets/css/plugins/toastr/toastr.min.css') }}">
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('assets/js/plugins/toastr/toastr.min.js') }}"></script>
+    <script src="{{ asset('assets/js/plugins/validate/jquery.validate.min.js') }}"></script>
+    <script src="{{ asset('assets/js/validations/validate.rh.constantes.js') }}"></script>
+{% endblock %}
+
+{% block breadcrumb %}
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            <h2>CONSTANTES</h2>
+            <ol class="breadcrumb">
+                <li>
+                    <a href="{{ url('_inicio') }}">Inicio</a>
+                </li>
+                <li>
+                    Recursos Humanos
+                </li>
+                <li class="active">
+                    <strong>Constantes</strong>
+                </li>
+            </ol>
+        </div>
+        <div class="col-lg-2">
+        </div>
+    </div>
+{% endblock %}
+
+{% block body %}
+
+    {# Mensajes #}
+    {% include 'templates/messages.html.twig' %}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="tabs-container">
+                <ul class="nav nav-tabs">
+                    <li {{ tab==1?'class="active"':'' }}><a data-toggle="tab" href="#tab-1"> Cargo</a></li>
+                    <li {{ tab==2?'class="active"':'' }}><a data-toggle="tab" href="#tab-2"> Categoría Ocupacional</a>
+                    </li>
+                    <li {{ tab==7?'class="active"':'' }}><a data-toggle="tab" href="#tab-7"> Entidades</a></li>
+                    <li {{ tab==4?'class="active"':'' }}><a data-toggle="tab" href="#tab-4"> Escala Salarial</a></li>
+                    <li {{ tab==6?'class="active"':'' }}><a data-toggle="tab" href="#tab-6"> Integración
+                            Revolucionaria</a></li>
+                    <li {{ tab==5?'class="active"':'' }}><a data-toggle="tab" href="#tab-5"> Nivel Escolar</a></li>
+                    <li {{ tab==3?'class="active"':'' }}><a data-toggle="tab" href="#tab-3"> Tipo de Contrato</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div id="tab-1" class="tab-pane {{ tab==1?'active':'' }}">
+                        <div class="panel-body">
+
+                            <div class="col-lg-2"></div>
+
+                            <div class="col-lg-8">
+
+                                {# Panel #}
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        CARGOS
+
+                                        {# Agragar Cargo #}
+                                        <a type="button" class="btn btn-primary btn-sm pull-right add" data-tab="1"
+                                           data-action="{{ url('_rh_add',{'tab':'1'}) }}" data-toggle="modal"
+                                           data-target="#ModalCargo">
+                                            <i class="fa fa-plus"></i>
+                                            Agregar
+                                        </a>
+                                        {# /Agragar Cargo #}
+
+                                    </div>
+                                    <div class="panel-body">
+                                        {# Table #}
+                                        <div class="ibox float-e-margins">
+                                            <div class="ibox-content table-responsive">
+
+                                                <table class="table table-hover">
+                                                    <thead>
+                                                    <tr>
+                                                        <th class="col-lg-9">Nombre</th>
+                                                        <th class="col-lg-3 text-center">Acciones</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    {% for item in cargos %}
+                                                        <tr>
+                                                            <td>{{ item.nombre }}</td>
+                                                            <td class="text-center">
+                                                                {% if item.nombre=='Especialista B en derechos sobre la vivienda' %}
+                                                                    <button class="btn btn-xs btn-danger disabled btn-block">
+                                                                        Bloqueado
+                                                                    </button>
+                                                                {% else %}
+                                                                    <div class="btn-group">
+                                                                        <a type="button"
+                                                                           class="btn btn-outline btn-success btn-xs edit"
+                                                                           data-tab="1" data-input="{{ item.nombre }}"
+                                                                           data-action="{{ url('_rh_edit', {'tab':'1', 'id':item.id}) }}"
+                                                                           data-toggle="modal"
+                                                                           data-target="#ModalCargo">
+                                                                            <i class="fa fa-clipboard"></i>
+                                                                            Editar
+                                                                        </a>
+                                                                        <a type="button"
+                                                                           class="btn btn-outline btn-danger btn-xs delete"
+                                                                           data-toggle="modal"
+                                                                           data-target="#ModalDelete"
+                                                                           data-name="{{ item.nombre }}" data-tab="1"
+                                                                           data-item="{{ item.id }}"
+                                                                           data-action="{{ url('_rh_delete',{'tab':'1'}) }}">
+                                                                            <i class="fa fa-trash"></i> Eliminar
+                                                                        </a>
+                                                                    </div>
+                                                                {% endif %}
+                                                            </td>
+                                                        </tr>
+                                                    {% else %}
+                                                        <tr>
+                                                            <td>No hay resultados</td>
+                                                        </tr>
+
+                                                    {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        {# /Table #}
+                                    </div>
+                                </div>
+                                {# /Panel #}
+
+                            </div>
+
+                            <div class="col-lg-2"></div>
+
+                        </div>
+                    </div>
+                    <div id="tab-2" class="tab-pane {{ tab==2?'active':'' }}">
+                        <div class="panel-body">
+                            <div class="col-lg-2"></div>
+
+                            <div class="col-lg-8">
+
+                                {# Panel #}
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        CATEGORÍA OCUPACIONAL
+
+                                        {# Agragar Categoria #}
+                                        <a type="button" class="btn btn-primary btn-sm pull-right add" data-tab="2"
+                                           data-action="{{ url('_rh_add',{'tab':'2'}) }}" data-toggle="modal"
+                                           data-target="#ModalCategoria">
+                                            <i class="fa fa-plus"></i>
+                                            Agregar
+                                        </a>
+                                        {# /Agragar Categoria #}
+
+                                    </div>
+                                    <div class="panel-body">
+                                        {# Table #}
+                                        <div class="ibox float-e-margins">
+                                            <div class="ibox-content table-responsive">
+
+                                                <table class="table table-hover">
+                                                    <thead>
+                                                    <tr>
+                                                        <th class="col-lg-9">Categoría Ocupacional</th>
+                                                        <th class="col-lg-3 text-center">Acciones</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    {% for item in categorias %}
+                                                        <tr>
+                                                            <td>{{ item.nombre }}</td>
+                                                            <td class="text-center">
+                                                                <div class="btn-group">
+                                                                    <a type="button"
+                                                                       class="btn btn-outline btn-success btn-xs edit"
+                                                                       data-tab="2" data-input="{{ item.nombre }}"
+                                                                       data-action="{{ url('_rh_edit', {'tab':'2', 'id':item.id}) }}"
+                                                                       data-toggle="modal"
+                                                                       data-target="#ModalCategoria">
+                                                                        <i class="fa fa-clipboard"></i>
+                                                                        Editar</a>
+                                                                    <a type="button"
+                                                                       class="btn btn-outline btn-danger btn-xs delete"
+                                                                       data-toggle="modal"
+                                                                       data-target="#ModalDelete"
+                                                                       data-name="{{ item.nombre }}" data-tab="2"
+                                                                       data-item="{{ item.id }}"
+                                                                       data-action="{{ url('_rh_delete',{'tab':'2'}) }}">
+                                                                        <i class="fa fa-trash"></i> Eliminar
+                                                                    </a>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    {% else %}
+                                                        <tr>
+                                                            <td>No hay resultados</td>
+                                                        </tr>
+
+                                                    {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        {# /Table #}
+                                    </div>
+                                </div>
+                                {# /Panel #}
+
+                            </div>
+
+                            <div class="col-lg-2"></div>
+                        </div>
+                    </div>
+                    <div id="tab-3" class="tab-pane {{ tab==3?'active':'' }}">
+                        <div class="panel-body">
+                            <div class="col-lg-2"></div>
+
+                            <div class="col-lg-8">
+
+                                {# Panel #}
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        TIPO DE CONTRATO
+
+                                        {# Agragar Contrato #}
+                                        <a type="button" class="btn btn-primary btn-sm pull-right add" data-tab="3"
+                                           data-action="{{ url('_rh_add',{'tab':'3'}) }}" data-toggle="modal"
+                                           data-target="#ModalContrato">
+                                            <i class="fa fa-plus"></i>
+                                            Agregar
+                                        </a>
+                                        {# /Agragar Contrato #}
+
+                                    </div>
+                                    <div class="panel-body">
+                                        {# Table #}
+                                        <div class="ibox float-e-margins">
+                                            <div class="ibox-content table-responsive">
+
+                                                <table class="table table-hover">
+                                                    <thead>
+                                                    <tr>
+                                                        <th class="col-lg-9">Tipo de contrato</th>
+                                                        <th class="col-lg-3 text-center">Acciones</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    {% for item in contratos %}
+                                                        <tr>
+                                                            <td>{{ item.tipo }}</td>
+                                                            <td class="text-center">
+                                                                <div class="btn-group">
+                                                                    <a type="button"
+                                                                       class="btn btn-outline btn-success btn-xs edit"
+                                                                       data-tab="3" data-input="{{ item.tipo }}"
+                                                                       data-action="{{ url('_rh_edit', {'tab':'3', 'id':item.id}) }}"
+                                                                       data-toggle="modal"
+                                                                       data-target="#ModalContrato">
+                                                                        <i class="fa fa-clipboard"></i>
+                                                                        Editar</a>
+                                                                    <a type="button"
+                                                                       class="btn btn-outline btn-danger btn-xs delete"
+                                                                       data-toggle="modal"
+                                                                       data-target="#ModalDelete"
+                                                                       data-name="{{ item.tipo }}" data-tab="3"
+                                                                       data-item="{{ item.id }}"
+                                                                       data-action="{{ url('_rh_delete',{'tab':'3'}) }}">
+                                                                        <i class="fa fa-trash"></i> Eliminar
+                                                                    </a>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    {% else %}
+                                                        <tr>
+                                                            <td>No hay resultados</td>
+                                                        </tr>
+
+                                                    {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        {# /Table #}
+                                    </div>
+                                </div>
+                                {# /Panel #}
+
+                            </div>
+
+                            <div class="col-lg-2"></div>
+                        </div>
+                    </div>
+                    <div id="tab-4" class="tab-pane {{ tab==4?'active':'' }}">
+                        <div class="panel-body">
+                            <div class="col-lg-2"></div>
+
+                            <div class="col-lg-8">
+
+                                {# Panel #}
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        ESCALA SALARIAL
+
+                                        {# Agragar Escala Salarial #}
+                                        <a type="button" class="btn btn-primary btn-sm pull-right add" data-tab="4"
+                                           data-action="{{ url('_rh_add',{'tab':'4'}) }}" data-toggle="modal"
+                                           data-target="#ModalESalarial">
+                                            <i class="fa fa-plus"></i>
+                                            Agregar
+                                        </a>
+                                        {# /Agragar  Escala Salarial #}
+                                    </div>
+                                    <div class="panel-body">
+                                        {# Table #}
+                                        <div class="ibox float-e-margins">
+                                            <div class="ibox-content table-responsive">
+
+                                                <table class="table table-hover">
+                                                    <thead>
+                                                    <tr>
+                                                        <th class="col-lg-5">Escala</th>
+                                                        <th class="col-lg-2 text-right">Salario</th>
+                                                        <th class="col-lg-2"></th>
+                                                        <th class="col-lg-3 text-center">Acciones</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    {% for item in escalas %}
+                                                        <tr>
+                                                            <td>{{ item.escala }}</td>
+                                                            <td class="text-right">{{ item.salario }}</td>
+                                                            <td class="text-right"></td>
+                                                            <td class="text-center">
+                                                                <div class="btn-group">
+                                                                    <a type="button"
+                                                                       class="btn btn-outline btn-success btn-xs edit"
+                                                                       data-tab="4" data-input="{{ item.escala }}"
+                                                                       data-input2="{{ item.salario }}"
+                                                                       data-action="{{ url('_rh_edit', {'tab':'4', 'id':item.id}) }}"
+                                                                       data-toggle="modal"
+                                                                       data-target="#ModalESalarial">
+                                                                        <i class="fa fa-clipboard"></i>
+                                                                        Editar</a>
+                                                                    <a type="button"
+                                                                       class="btn btn-outline btn-danger btn-xs delete"
+                                                                       data-toggle="modal"
+                                                                       data-target="#ModalDelete"
+                                                                       data-name="{{ item.escala~' - '~item.salario }}"
+                                                                       data-tab="4" data-item="{{ item.id }}"
+                                                                       data-action="{{ url('_rh_delete',{'tab':'4'}) }}">
+                                                                        <i class="fa fa-trash"></i> Eliminar
+                                                                    </a>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    {% else %}
+                                                        <tr>
+                                                            <td>No hay resultados</td>
+                                                        </tr>
+
+                                                    {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        {# /Table #}
+                                    </div>
+                                </div>
+                                {# /Panel #}
+
+                            </div>
+
+                            <div class="col-lg-2"></div>
+                        </div>
+                    </div>
+                    <div id="tab-5" class="tab-pane {{ tab==5?'active':'' }}">
+                        <div class="panel-body">
+                            <div class="col-lg-2"></div>
+
+                            <div class="col-lg-8">
+
+                                {# Panel #}
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        NIVEL ESCOLAR
+
+                                        {# Agragar Nivel Escolar #}
+                                        <a type="button" class="btn btn-primary btn-sm pull-right add" data-tab="5"
+                                           data-action="{{ url('_rh_add',{'tab':'5'}) }}" data-toggle="modal"
+                                           data-target="#ModalEscolaridad">
+                                            <i class="fa fa-plus"></i>
+                                            Agregar
+                                        </a>
+                                        {# /Agragar Nivel Escolar #}
+
+                                    </div>
+                                    <div class="panel-body">
+                                        {# Table #}
+                                        <div class="ibox float-e-margins">
+                                            <div class="ibox-content table-responsive">
+
+                                                <table class="table table-hover">
+                                                    <thead>
+                                                    <tr>
+                                                        <th class="col-lg-9">Nivel</th>
+                                                        <th class="col-lg-3 text-center">Acciones</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    {% for item in escolaridad %}
+                                                        <tr>
+                                                            <td>{{ item.nivel }}</td>
+                                                            <td class="text-center">
+                                                                <div class="btn-group">
+                                                                    <a type="button"
+                                                                       class="btn btn-outline btn-success btn-xs edit"
+                                                                       data-tab="5" data-input="{{ item.nivel }}"
+                                                                       data-action="{{ url('_rh_edit', {'tab':'5', 'id':item.id}) }}"
+                                                                       data-toggle="modal"
+                                                                       data-target="#ModalEscolaridad">
+                                                                        <i class="fa fa-clipboard"></i>
+                                                                        Editar</a>
+                                                                    <a type="button"
+                                                                       class="btn btn-outline btn-danger btn-xs delete"
+                                                                       data-toggle="modal"
+                                                                       data-target="#ModalDelete"
+                                                                       data-name="{{ item.nivel }}" data-tab="5"
+                                                                       data-item="{{ item.id }}"
+                                                                       data-action="{{ url('_rh_delete',{'tab':'5'}) }}">
+                                                                        <i class="fa fa-trash"></i> Eliminar
+                                                                    </a>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    {% else %}
+                                                        <tr>
+                                                            <td>No hay resultados</td>
+                                                        </tr>
+
+                                                    {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        {# /Table #}
+                                    </div>
+                                </div>
+                                {# /Panel #}
+
+                            </div>
+
+                            <div class="col-lg-2"></div>
+                        </div>
+                    </div>
+                    <div id="tab-6" class="tab-pane {{ tab==6?'active':'' }}">
+                        <div class="panel-body">
+                            <div class="col-lg-2"></div>
+
+                            <div class="col-lg-8">
+
+                                {# Panel #}
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        INTEGRACIÓN REVOLUCIONARIA
+
+                                        {# Agragar Integracion #}
+                                        <a type="button" class="btn btn-primary btn-sm pull-right add" data-tab="6"
+                                           data-action="{{ url('_rh_add',{'tab':'6'}) }}" data-toggle="modal"
+                                           data-target="#ModalIntegracion">
+                                            <i class="fa fa-plus"></i>
+                                            Agregar
+                                        </a>
+                                        {# /Agragar Integracion #}
+
+                                    </div>
+                                    <div class="panel-body">
+                                        {# Table #}
+                                        <div class="ibox float-e-margins">
+                                            <div class="ibox-content table-responsive">
+
+                                                <table class="table table-hover">
+                                                    <thead>
+                                                    <tr>
+                                                        <th class="col-lg-9">Nombre</th>
+                                                        <th class="col-lg-3 text-center">Acciones</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    {% for item in integraciones %}
+                                                        <tr>
+                                                            <td>{{ item.nombre }}</td>
+                                                            <td class="text-center">
+                                                                <div class="btn-group">
+                                                                    <a type="button"
+                                                                       class="btn btn-outline btn-success btn-xs edit"
+                                                                       data-tab="6" data-input="{{ item.nombre }}"
+                                                                       data-action="{{ url('_rh_edit', {'tab':'6', 'id':item.id}) }}"
+                                                                       data-toggle="modal"
+                                                                       data-target="#ModalIntegracion">
+                                                                        <i class="fa fa-clipboard"></i>
+                                                                        Editar</a>
+                                                                    <a type="button"
+                                                                       class="btn btn-outline btn-danger btn-xs delete"
+                                                                       data-toggle="modal"
+                                                                       data-target="#ModalDelete"
+                                                                       data-name="{{ item.nombre }}" data-tab="6"
+                                                                       data-item="{{ item.id }}"
+                                                                       data-action="{{ url('_rh_delete',{'tab':'6'}) }}">
+                                                                        <i class="fa fa-trash"></i> Eliminar
+                                                                    </a>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    {% else %}
+                                                        <tr>
+                                                            <td>No hay resultados</td>
+                                                        </tr>
+
+                                                    {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        {# /Table #}
+                                    </div>
+                                </div>
+                                {# /Panel #}
+
+                            </div>
+
+                            <div class="col-lg-2"></div>
+                        </div>
+                    </div>
+                    <div id="tab-7" class="tab-pane {{ tab==7?'active':'' }}">
+                        <div class="panel-body">
+
+                            <div class="col-lg-2"></div>
+
+                            <div class="col-lg-8">
+
+                                {# Panel #}
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        ENTIDADES
+
+                                        {# Agragar Entidad #}
+                                        <a type="button" class="btn btn-primary btn-sm pull-right add" data-tab="7"
+                                           data-action="{{ url('_rh_add',{'tab':'7'}) }}" data-toggle="modal"
+                                           data-target="#ModalEntidad">
+                                            <i class="fa fa-plus"></i>
+                                            Agregar
+                                        </a>
+                                        {# /Agragar Entidad #}
+
+                                    </div>
+                                    <div class="panel-body">
+                                        {# Table #}
+                                        <div class="ibox float-e-margins">
+                                            <div class="ibox-content table-responsive">
+
+                                                <table class="table table-hover">
+                                                    <thead>
+                                                    <tr>
+                                                        <th class="col-lg-3">Nombre</th>
+                                                        <th class="col-lg-5">Dirección</th>
+                                                        <th class="col-lg-1">Teléfono</th>
+                                                        <th class="col-lg-3 text-center">Acciones</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    {% for item in entidades %}
+                                                        <tr>
+                                                            <td>{{ item.nombre }}</td>
+                                                            <td>{{ item.direccion }}</td>
+                                                            <td>{{ item.telefono }}</td>
+                                                            <td class="text-center">
+                                                                <div class="btn-group">
+                                                                    <a type="button"
+                                                                       class="btn btn-outline btn-success btn-xs edit"
+                                                                       data-tab="7" data-input="{{ item.nombre }}"
+                                                                       data-input2="{{ item.direccion }}"
+                                                                       data-input3="{{ item.telefono }}"
+                                                                       data-action="{{ url('_rh_edit', {'tab':'7', 'id':item.id}) }}"
+                                                                       data-toggle="modal"
+                                                                       data-target="#ModalEntidad">
+                                                                        <i class="fa fa-clipboard"></i>
+                                                                        Editar
+                                                                    </a>
+                                                                    <a type="button"
+                                                                       class="btn btn-outline btn-danger btn-xs delete"
+                                                                       data-toggle="modal"
+                                                                       data-target="#ModalDelete"
+                                                                       data-name="{{ item.nombre }}" data-tab="7"
+                                                                       data-item="{{ item.id }}"
+                                                                       data-action="{{ url('_rh_delete',{'tab':'7'}) }}">
+                                                                        <i class="fa fa-trash"></i> Eliminar
+                                                                    </a>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    {% else %}
+                                                        <tr>
+                                                            <td>No hay resultados</td>
+                                                        </tr>
+
+                                                    {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        {# /Table #}
+                                    </div>
+                                </div>
+                                {# /Panel #}
+
+                            </div>
+
+                            <div class="col-lg-2"></div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Modal Windows #}
+    {# Modal Cargo #}
+    <div class="modal inmodal fade" id="ModalCargo" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span
+                                aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h5 id="mTitle1" class="modal-title text-green">AGREGAR NUEVO CARGO</h5>
+                    <small id="mText1" class="font-bold">
+                        Esta ventana le permite agregar un nuevo cargo de forma simple,
+                        solo tiene que introducir el nombre del cargo y hacer clic en guardar.
+                    </small>
+                </div>
+                {{ form_start(formCargo, {'action':url('_rh_add', {'tab':'1'}), 'attr':{'id':'formCargo'}}) }}
+                <div class="modal-body">
+                    {{ form_label(formCargo.nombre, 'Nombre del cargo') }}
+                    {{ form_widget(formCargo.nombre, {'attr':{'placeholder':'Nombre'}}) }}
+                </div>
+                <div class="modal-footer">
+                    <button id="mButton1" type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Guardar
+                    </button>
+                </div>
+                {{ form_end(formCargo) }}
+            </div>
+        </div>
+    </div>
+    {# /Modal Cargo #}
+
+    {# Modal Categoria #}
+    <div class="modal inmodal fade" id="ModalCategoria" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span
+                                aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h5 id="mTitle2" class="modal-title text-green">AGREGAR NUEVA CATEGORÍA OCUPACIONAL</h5>
+                    <small id="mText2" class="font-bold">
+                        Esta ventana le permite agregar una nueva categoría ocupacional de forma simple,
+                        solo tiene que introducir el nombre de la categoría y hacer clic en guardar.
+                    </small>
+                </div>
+                {{ form_start(formCategoria, {'action':url('_rh_add', {'tab':'2'}), 'attr':{'id':'formCategoria'}}) }}
+                <div class="modal-body">
+                    {{ form_label(formCategoria.nombre, 'Nombre de la categoría ocupacional') }}
+                    {{ form_widget(formCategoria.nombre, {'attr':{'placeholder':'Nombre'}}) }}
+                </div>
+                <div class="modal-footer">
+                    <button id="mButton2" type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Guardar
+                    </button>
+                </div>
+                {{ form_end(formCategoria) }}
+            </div>
+        </div>
+    </div>
+    {# /Modal Categoria #}
+
+    {# Modal Contrato #}
+    <div class="modal inmodal fade" id="ModalContrato" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span
+                                aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h5 id="mTitle3" class="modal-title text-green">AGREGAR NUEVO TIPO DE CONTRATO</h5>
+                    <small id="mText3" class="font-bold">
+                        Esta ventana le permite agregar un nuevo tipo de contrato de forma simple,
+                        solo tiene que introducir el nombre del tipo de contrato y hacer clic en guardar.
+                    </small>
+                </div>
+                {{ form_start(formContrato, {'action':url('_rh_add', {'tab':'3'}), 'attr':{'id':'formContrato'}}) }}
+                <div class="modal-body">
+                    {{ form_label(formContrato.tipo, 'Nombre del tipo de contrato') }}
+                    {{ form_widget(formContrato.tipo, {'attr':{'placeholder':'Nombre'}}) }}
+                </div>
+                <div class="modal-footer">
+                    <button id="mButton3" type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Guardar
+                    </button>
+                </div>
+                {{ form_end(formContrato) }}
+            </div>
+        </div>
+    </div>
+    {# /Modal Contrato #}
+
+    {# Modal Escala Salarial #}
+    <div class="modal inmodal fade" id="ModalESalarial" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span
+                                aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h5 id="mTitle4" class="modal-title text-green">AGREGAR NUEVA ESCALA SALARIAL</h5>
+                    <small id="mText4" class="font-bold">
+                        Esta ventana le permite agregar una nueva escala salarial de forma simple,
+                        solo tiene que introducir el nombre de la escala, el salario de la misma y hacer clic en
+                        guardar.
+                    </small>
+                </div>
+                {{ form_start(formEscalaSalarial, {'action':url('_rh_add', {'tab':'4'}), 'attr':{'id':'formEscalaSalarial'}}) }}
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-8">
+                            {{ form_label(formEscalaSalarial.escala, 'Nombre de escala salarial') }}
+                            {{ form_widget(formEscalaSalarial.escala, {'attr':{'placeholder':'Nombre'}}) }}
+                        </div>
+                        <div class="col-lg-4">
+                            {{ form_label(formEscalaSalarial.salario, 'Salario') }}
+                            <div class="input-group m-b">
+                                <span class="input-group-addon">$</span>
+                                {{ form_widget(formEscalaSalarial.salario, {'attr':{'placeholder':'0.00'}}) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="mButton4" type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Guardar
+                    </button>
+                </div>
+                {{ form_end(formEscalaSalarial) }}
+            </div>
+        </div>
+    </div>
+    {# /Modal Escala Salarial #}
+
+    {# Modal Nivel Escolar #}
+    <div class="modal inmodal fade" id="ModalEscolaridad" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span
+                                aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h5 id="mTitle5" class="modal-title text-green">AGREGAR NUEVO NIVEL ESCOLAR</h5>
+                    <small id="mText5" class="font-bold">
+                        Esta ventana le permite agregar un nuevo nivel escolar de forma simple,
+                        solo tiene que introducir el nombre del nivel escolar y hacer clic en guardar.
+                    </small>
+                </div>
+                {{ form_start(formEscolaridad, {'action':url('_rh_add', {'tab':'5'}), 'attr':{'id':'formEscolaridad'}}) }}
+                <div class="modal-body">
+                    {{ form_label(formEscolaridad.nivel, 'Nombre del nivel escolar') }}
+                    {{ form_widget(formEscolaridad.nivel, {'attr':{'placeholder':'Nombre'}}) }}
+                </div>
+                <div class="modal-footer">
+                    <button id="mButton5" type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Guardar
+                    </button>
+                </div>
+                {{ form_end(formEscolaridad) }}
+            </div>
+        </div>
+    </div>
+    {# /Modal Nivel Escolar #}
+
+    {# Modal Integracion #}
+    <div class="modal inmodal fade" id="ModalIntegracion" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span
+                                aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h5 id="mTitle6" class="modal-title text-green">AGREGAR NUEVA INTEGRACIÓN REVOLUCIONARIA</h5>
+                    <small id="mText6" class="font-bold">
+                        Esta ventana le permite agregar una nueva integración revolucionaria de forma simple,
+                        solo tiene que introducir el nombre del tipo de integración y hacer clic en guardar.
+                    </small>
+                </div>
+                {{ form_start(formIntegracion, {'action':url('_rh_add', {'tab':'6'}), 'attr':{'id':'formIntegracion'}}) }}
+                <div class="modal-body">
+                    {{ form_label(formIntegracion.nombre, 'Nombre del tipo de integración') }}
+                    {{ form_widget(formIntegracion.nombre, {'attr':{'placeholder':'Nombre'}}) }}
+                </div>
+                <div class="modal-footer">
+                    <button id="mButton6" type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Guardar
+                    </button>
+                </div>
+                {{ form_end(formIntegracion) }}
+            </div>
+        </div>
+    </div>
+    {# /Modal Integracion #}
+
+    {# Modal Entidad #}
+    <div class="modal inmodal fade" id="ModalEntidad" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span
+                                aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h5 id="mTitle7" class="modal-title text-green">AGREGAR NUEVA ENTIDAD</h5>
+                    <small id="mText7" class="font-bold">
+                        Esta ventana le permite agregar un nuevo cargo de forma simple,
+                        solo tiene que introducir el nombre del cargo y hacer clic en guardar.
+                    </small>
+                </div>
+                {{ form_start(formEntidad, {'action':url('_rh_add', {'tab':'7'}), 'attr':{'id':'formEntidad'}}) }}
+                <div class="modal-body">
+                    <div class="form-group">
+                        {{ form_label(formEntidad.nombre, 'Nombre de la entidad') }}
+                        {{ form_widget(formEntidad.nombre, {'attr':{'placeholder':'Nombre'}}) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(formEntidad.direccion, 'Dirección') }}
+                        {{ form_widget(formEntidad.direccion, {'attr':{'placeholder':'Dirección de la entidad'}}) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(formEntidad.telefono, 'Teléfono') }}
+                        {{ form_widget(formEntidad.telefono, {'attr':{'placeholder':'ej: +53 45 555555'}}) }}
+                    </div>
+                    <div class="form-group hidden">
+                        {{ form_widget(formEntidad) }}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="mButton7" type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Guardar
+                    </button>
+                </div>
+                {{ form_end(formEntidad) }}
+            </div>
+        </div>
+    </div>
+    {# /Modal Entidad #}
+
+    {# Modal Eliminar Constantes #}
+    <div class="modal inmodal fade" id="ModalDelete" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span
+                                aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h5 id="delete_title" class="modal-title text-danger">¿ESTÁ SEGURO?</h5>
+                </div>
+                {{ form_start(formDelete, {'attr':{'id':'formDelete'}}) }}
+                <div class="modal-body">
+                    <p id="delete_text" class="font-bold">
+
+                    </p>
+
+                    <div class="hidden">
+                        {{ form_widget(formDelete) }}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">No, Cancelar</button>
+                    <button type="submit" class="btn btn-danger">Si, Eliminar</button>
+                </div>
+                {{ form_end(formDelete) }}
+            </div>
+        </div>
+    </div>
+    {# /Modal Eliminar Constantes #}
+
+    {# /Modal Windows #}
+{% endblock %}

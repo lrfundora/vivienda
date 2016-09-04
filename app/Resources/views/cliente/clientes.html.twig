@@ -1,0 +1,120 @@
+{% extends 'templates/layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('assets/css/plugins/toastr/toastr.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/plugins/dataTables/datatables.min.css') }}">
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('assets/js/plugins/toastr/toastr.min.js') }}"></script>
+    <script src="{{ asset('assets/js/plugins/validate/jquery.validate.min.js') }}"></script>
+    <script src="{{ asset('assets/js/validations/validate.cliente.js') }}"></script>
+    <script src="{{ asset('assets/js/plugins/dataTables/datatables.min.js') }}"></script>
+    <script src="{{ asset('assets/js/plugins/jeditable/jquery.jeditable.js') }}"></script>
+    <script>
+        $(function () {
+            $('#editable').DataTable({
+                aaSorting: [[1, "asc"]]
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block breadcrumb %}
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            <h2 class="text-uppercase">Clientes</h2>
+            <ol class="breadcrumb">
+                <li>
+                    <a href="{{ url('_inicio') }}">Inicio</a>
+                </li>
+                <li>
+                    {{ menu=='area'?'Área Legal':'Control de Fondo' }}
+                </li>
+                <li class="active">
+                    <strong>Clientes</strong>
+                </li>
+            </ol>
+        </div>
+        <div class="col-lg-2">
+        </div>
+    </div>
+{% endblock %}
+
+{% block body %}
+
+    {# Mensajes #}
+    {% include 'templates/messages.html.twig' %}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5 class="text-uppercase">Clientes</h5>
+
+                    <div class="ibox-content table-responsive">
+                        <table id="editable" class="table table-striped table-bordered table-hover">
+                            <thead>
+                            <tr>
+                                <th class="col-lg-2">Carnet</th>
+                                <th class="col-lg-3">Nombre y Apellido</th>
+                                <th class="col-lg-6">Dirección</th>
+                                <th class="col-lg-1 text-center">Acción</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for item in clientes %}
+                                <tr>
+                                    <td>{{ item.carnet }}</td>
+                                    <td>
+                                        {{ item.nombreCompleto }}
+                                    </td>
+                                    <td>
+                                        {{ item.direccion }}
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="tooltip-demo">
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-outline btn-info info"
+                                                        data-toggle="tooltip" data-placement="top"
+                                                        title="Información de trámites"
+                                                        data-id="{{ item.id }}">
+                                                    <i class="fa fa-info-circle"></i>
+                                                </button>
+                                                {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_ABOGADO') %}
+                                                    <button type="button" class="btn btn-outline btn-primary new"
+                                                            data-toggle="tooltip" data-placement="top"
+                                                            title="Nuevo trámite"
+                                                            data-id="{{ item.id }}">
+                                                        <i class="fa fa-plus"></i>
+                                                    </button>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="hidden">
+        {{ form_start(formInfo, {'attr':{'id':'formInfo'}}) }}
+        {{ form_widget(formInfo) }}
+        {{ form_end(formInfo) }}
+    </div>
+
+    <div class="hidden">
+        {{ form_start(formNewTramite, {'attr':{'id':'formNewTramite'}}) }}
+        {{ form_widget(formNewTramite) }}
+        {{ form_end(formNewTramite) }}
+    </div>
+
+{% endblock %}

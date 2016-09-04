@@ -1,0 +1,152 @@
+{% extends 'templates/layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('assets/css/plugins/toastr/toastr.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/plugins/select2/select2.min.css') }}">
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('assets/js/plugins/toastr/toastr.min.js') }}"></script>
+    <script src="{{ asset('assets/js/plugins/select2/select2.full.min.js') }}"></script>
+    <script src="{{ asset('assets/js/plugins/validate/jquery.validate.min.js') }}"></script>
+    <script src="{{ asset('assets/js/validations/validate.rh.plantilla.trab.new.js') }}"></script>
+{% endblock %}
+
+{% block breadcrumb %}
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            <h2 class="text-uppercase">nuevo trabajador</h2>
+            <ol class="breadcrumb">
+                <li>
+                    <a href="{{ url('_inicio') }}">Inicio</a>
+                </li>
+                <li>
+                    Recursos Humanos
+                </li>
+                <li>
+                    <a href="{{ url('_rh_plantilla') }}">Plantilla laboral</a>
+                </li>
+                <li>
+                    <strong>Trabajador</strong>
+                </li>
+                <li class="active">
+                    <strong>Nuevo</strong>
+                </li>
+            </ol>
+        </div>
+        <div class="col-lg-2">
+        </div>
+    </div>
+{% endblock %}
+
+{% block body %}
+
+    {# Mensajes #}
+    {% include 'templates/messages.html.twig' %}
+
+    <div class="row">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5 class="text-uppercase">nuevo trabajador</h5>
+
+                <div class="ibox-content">
+                    <div class="row">
+                        {{ form_start(form, {'attr':{'id':'form'}}) }}
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                {{ form_label(form.carnet, 'Carnet de identidad') }}
+                                {{ form_widget(form.carnet, {'attr':{'placeholder':'Carnet'}}) }}
+                            </div>
+                            <div class="form-group">
+                                {{ form_label(form.nombre, 'Nombre') }}
+                                {{ form_widget(form.nombre, {'attr':{'placeholder':'Nombre'}}) }}
+                            </div>
+                            <div class="form-group">
+                                {{ form_label(form.apellidos, 'Apellidos') }}
+                                {{ form_widget(form.apellidos, {'attr':{'placeholder':'Apellidos'}}) }}
+                            </div>
+                            <div class="form-group">
+                                {{ form_label(form.direccion, 'Dirección particular') }}
+                                {{ form_widget(form.direccion, {'attr':{'placeholder':'Dirección particular','style':'height:103px'}}) }}
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                {{ form_label(form.sexo, 'Sexo') }}<br>
+                                {{ form_widget(form.sexo, {'attr':{'style':'width:100%' }}) }}
+                            </div>
+                            <div class="form-group">
+                                <div class="form-group">
+                                    {{ form_label(form.entidad, 'Entidad') }}<br>
+                                    {{ form_widget(form.entidad, {'attr':{'style':'width:100%' }}) }}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="form-group">
+                                    {{ form_label(form.contrato, 'Tipo de contrato') }}<br>
+                                    {{ form_widget(form.contrato, {'attr':{'style':'width:100%' }}) }}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">Integración revolucionaria</label><br>
+                                <select id="intSelect" name="intSelect" class="form-control" multiple="multiple"
+                                        data-selected="{{ integSelected }}" style="width: 100%">
+                                    {% for item in integraciones %}
+                                        <option {{ item.nombre=='FMC'?'id="fmc"':'' }} value="{{ item.id }}">{{ item.nombre }}</option>
+                                    {% endfor %}
+                                </select>
+                                <label id="intSelect-error" class="hidden error" for="intSelect"></label>
+                                <input id="integraciones" name="integraciones" type="text" class="hidden"
+                                       value="{{ integSelected }}"/>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <div class="form-group">
+                                    {{ form_label(form.cargo, 'Cargo') }}<br>
+                                    {{ form_widget(form.cargo, {'attr':{'style':'width:100%' }}) }}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="form-group">
+                                    {{ form_label(form.categoria, 'Categoría ocupacional') }}<br>
+                                    {{ form_widget(form.categoria, {'attr':{'style':'width:100%' }}) }}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="form-group">
+                                    {{ form_label(form.escolaridad, 'Nivel escolar') }}<br>
+                                    {{ form_widget(form.escolaridad, {'attr':{'style':'width:100%' }}) }}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="form-group">
+                                    {{ form_label(form.escalaSalarial, 'Escala salarial') }}<br>
+                                    {{ form_widget(form.escalaSalarial, {'attr':{'style':'width:100%' }}) }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <div class="pull-right">
+                                    <button id="cancel" data-url="{{ url('_rh_plantilla') }}" type="button"
+                                            class="btn btn-default ">
+                                        <i class="fa fa-times-circle"></i>
+                                        Cancelar
+                                    </button>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fa fa-save"></i>
+                                        Guardar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

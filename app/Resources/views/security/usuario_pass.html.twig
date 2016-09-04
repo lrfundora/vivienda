@@ -1,0 +1,87 @@
+{% extends 'templates/layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('assets/css/plugins/toastr/toastr.min.css') }}">
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('assets/js/plugins/toastr/toastr.min.js') }}"></script>
+    <script src="{{ asset('assets/js/plugins/validate/jquery.validate.min.js') }}"></script>
+    <script src="{{ asset('assets/js/validations/validate.security.user.change.pass.js') }}"></script>
+{% endblock %}
+
+{% block breadcrumb %}
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            <h2 class="text-uppercase">Cambiar contraseña</h2>
+            <ol class="breadcrumb">
+                <li>
+                    <a href="{{ url('_inicio') }}">Inicio</a>
+                </li>
+                <li>
+                    Seguridad
+                </li>
+                {#<li>#}
+                {#<a href="{{ url('_seguridad_usuario') }}">Usuarios</a>#}
+                {#</li>#}
+                <li class="active">
+                    <strong>Cambiar contraseña</strong>
+                </li>
+            </ol>
+        </div>
+        <div class="col-lg-2">
+        </div>
+    </div>
+{% endblock %}
+
+{% block body %}
+
+    {# Mensajes #}
+    {% include 'templates/messages.html.twig' %}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5 class="text-uppercase">Cambiar contraseña</h5>
+
+                    <div class="ibox-content">
+                        <div class="row">
+                            <div class="col-lg-3"></div>
+
+                            <div class="col-lg-6">
+                                {{ form_start(form, {'attr':{'id':'form'}}) }}
+                                <input class="hidden" id="changePass_id" name="changePass_id" type="text"
+                                       value="{{ app.user.id }}">
+
+                                <div class="form-group">
+                                    <label class="control-label" for="oldPass">Contraseña actual</label>
+                                    <input type="password" class="form-control" id="oldPass" name="oldPass"
+                                           placeholder="Contraseña actual"/>
+                                </div>
+                                <div class="form-group">
+                                    {{ form_label(form.password.first, 'Nueva contraseña') }}
+                                    {{ form_widget(form.password.first, {'attr':{'placeholder':'Contraseña'}}) }}
+                                </div>
+                                <div class="form-group">
+                                    {{ form_label(form.password.second, 'Repetir contraseña') }}
+                                    {{ form_widget(form.password.second, {'attr':{'placeholder':'Repetir contraseña'}}) }}
+                                </div>
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-primary btn-sm pull-right">
+                                        <i class="fa fa-refresh"></i> Cambiar
+                                    </button>
+                                </div>
+                                {{ form_end(form) }}
+                            </div>
+
+                            <div class="col-lg-3"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

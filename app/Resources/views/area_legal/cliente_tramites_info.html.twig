@@ -1,0 +1,114 @@
+{% extends 'templates/layout.html.twig' %}
+
+{% block breadcrumb %}
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            <h2 class="text-uppercase">Trámites realizados por el cliente</h2>
+            <ol class="breadcrumb">
+                <li>
+                    <a href="{{ url('_inicio') }}">Inicio</a>
+                </li>
+                <li>
+                    Área Legal
+                </li>
+                <li>
+                    Cliente
+                </li>
+                <li class="active">
+                    <strong>Trámites realizados</strong>
+                </li>
+            </ol>
+        </div>
+        <div class="col-lg-2">
+        </div>
+    </div>
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5 class="text-uppercase">información del cliente</h5>
+
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <h3 class="text-green">
+                                <span class="text-uppercase text-muted">carnet: </span>
+                                {{ cliente.carnet }}
+                            </h3>
+
+                            <h3 class="text-green">
+                                <span class="text-uppercase text-muted"> cliente: </span>
+                                {{ cliente.nombreCompleto }}
+                            </h3>
+
+                            <h3 class="text-green">
+                                <span class="text-uppercase text-muted"> dirección: </span>
+                                {{ cliente.direccion }}
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5 class="text-uppercase">trámites realizados</h5>
+
+                {% for tramite in tramites %}
+                    <div class="ibox-content">
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <div>
+                                    Entrada: <span class="text-green">{{ tramite.fechaEntrada | date('d/m/Y') }}</span>
+                                </div>
+                                <div>
+                                    Vence: <span
+                                            class="text-danger">{{ tramite.fechaVencimiento | date('d/m/Y') }}</span>
+                                </div>
+                                <div>
+                                    Estado:
+                                    {% if tramite.isCompletado %}
+                                        <span class="text-success">
+                                        <i class="fa fa-check-square-o"></i> Finalizado
+                                    </span>
+                                    {% else %}
+                                        {% if tramite.fechaVencimiento | dateCompare()<0 %}
+                                            <span class="text-danger">
+                                            <i class="fa fa-warning"></i>
+                                            Vencido
+                                            (por {{ tramite.fechaVencimiento | dateCompare()*(-1) }}
+                                                días)
+                                        </span>
+                                        {% else %}
+                                            <span class="text-green">
+                                            <i class="fa fa-clipboard"></i>
+                                            En termino (por {{ tramite.fechaVencimiento | dateCompare() }} días)
+                                        </span>
+                                        {% endif %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-lg-9">
+                                Descripción: <strong>{{ tramite.descripcion }}</strong>
+                            </div>
+                            <div class="col-lg-3"></div>
+                            <div class="col-lg-9">
+                                Comentario:
+                                {% if tramite.comentario %}
+                                    <span class="text-warning">{{ tramite.comentario }}</span>
+                                {% else %}
+                                    <span class="text-muted">Sin comentario</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

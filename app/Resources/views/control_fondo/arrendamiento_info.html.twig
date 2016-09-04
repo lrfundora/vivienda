@@ -1,0 +1,185 @@
+{% extends 'templates/layout.html.twig' %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('assets/js/plugins/jsPDF/dist/jspdf.min.js') }}"></script>
+    <script src="{{ asset('assets/js/plugins/jsPDF/js/basic.js') }}"></script>
+{% endblock %}
+
+{% block breadcrumb %}
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            <h2 class="text-uppercase">información de arrendamiento</h2>
+            <ol class="breadcrumb">
+                <li>
+                    <a href="{{ url('_inicio') }}">Inicio</a>
+                </li>
+                <li>
+                    Control de Fondos
+                </li>
+                <li>
+                    <a href="{{ url('_cf_arrendamiento') }}">Arrendamientos</a>
+                </li>
+                <li class="active">
+                    <strong>Información</strong>
+                </li>
+            </ol>
+        </div>
+        <div class="col-lg-2">
+        </div>
+    </div>
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="ibox float-e-margins">
+            <div id="pdf" class="ibox-title">
+                <div class="pull-right">
+                    <a href="javascript:ExportToPDFFromHTML('pdf', 'informacion_de_arrendamiento')"
+                       type="button" class="btn btn-outline btn-danger btn-xs">
+                        <i class="fa fa-file-pdf-o"> </i>
+                        Exportar a PDF
+                    </a>
+                </div>
+
+                <h5 class="text-uppercase">Información de arrendamiento</h5>
+
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <h3 class="text-uppercase text-green">
+                                        Arrendatario(s)
+                                    </h3>
+                                </div>
+
+                                {% for cliente in arrendamiento.clientes %}
+                                    <div class="social-feed-box">
+                                        <div class="social-body">
+                                            <div class="row">
+                                                <div class="col-lg-6">
+                                                    <div class="form-group">
+                                                        <p>Carnet de identidad: <br/>
+                                                            <strong>{{ cliente.carnet }}</strong>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <div class="form-group">
+                                                        <p>Nombre y Apellidos: <br/>
+                                                            <strong>{{ cliente.nombreCompleto }}</strong>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12">
+                                                    <div class="form-group">
+                                                        <p>Dirección particular: <br/>
+                                                            <strong>{{ cliente.direccion }}</strong>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="col-lg-8">
+                                <div class="form-group">
+                                    <h3 class="text-uppercase text-green">
+                                        Arrendamiento
+                                    </h3>
+                                </div>
+                                <div class="social-feed-box">
+                                    <div class="social-body">
+                                        <div class="row">
+                                            <div class="col-lg-2">
+                                                <div class="form-group">
+                                                    <p>No. Registro: <br/>
+                                                        <strong>{{ arrendamiento.numeroRegistro }}</strong>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <div class="form-group">
+                                                    <p>Resolución: <br/>
+                                                        <strong>{{ arrendamiento.resolucion }}</strong>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-2">
+                                                <div class="form-group">
+                                                    <p>No. Expediente: <br/>
+                                                        <strong>{{ arrendamiento.expediente }}</strong>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-2">
+                                                <div class="form-group">
+                                                    <p>No. Contrato: <br/>
+                                                        <strong>{{ arrendamiento.numeroContrato }}</strong>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-2">
+                                                <div class="form-group">
+                                                    <p>Fecha de Contrato: <br/>
+                                                        <strong>{{ arrendamiento.fechaContrato | date('d/m/Y') }}</strong>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-2">
+                                                <div class="form-group">
+                                                    <p>Año Construcción: <br/>
+                                                        <strong>{{ arrendamiento.anoConstruccion }}</strong>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-2">
+                                                <div class="form-group">
+                                                    <p>Estado: <br/>
+                                                        <strong>{{ arrendamiento.estado }}</strong>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-2">
+                                                <div class="form-group">
+                                                    <p>Valor: <br/>
+                                                        <strong>{{ arrendamiento.valor | number_format('2', '.', ',') }}</strong>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-2">
+                                                <div class="form-group">
+                                                    <p>Cuota mensual: <br/>
+                                                        <strong>{{ (arrendamiento.valor/180) | number_format('2', '.', ',') }}</strong>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <div class="form-group">
+                                                    <p>Meses pagados: <br/>
+                                                        <strong>{{ arrendamiento.isTodoPago?'Todo el año':arrendamiento.mesesPagados }}</strong>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12">
+                                                <div class="form-group">
+                                                    <p>Motivo de arrendamiento: <br/>
+                                                        <strong>{{ arrendamiento.motivo }}</strong>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,572 @@
+{% extends 'templates/layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('assets/css/plugins/c3/c3.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/plugins/morris/morris-0.4.3.min.css') }}">
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('assets/js/plugins/d3/d3.min.js') }}"></script>
+    <script src="{{ asset('assets/js/plugins/c3/c3.min.js') }}"></script>
+    <script src="{{ asset('assets/js/plugins/morris/raphael-2.1.0.min.js') }}"></script>
+    <script src="{{ asset('assets/js/plugins/morris/morris.js') }}"></script>
+    <script>
+        $(function () {
+
+            // Usuarios del sistema
+            // Datos unitarios
+            var users = $('#user');
+            Morris.Donut({
+                element: 'user',
+                data: [{label: "Activos", value: users.attr('data-value1')},
+                    {label: "Inactivos", value: users.attr('data-value2')}],
+                resize: true,
+                colors: ['#54cdb4', '#1ab394']
+            });
+
+            // En porciento
+            c3.generate({
+                bindto: '#user1',
+                data: {
+                    columns: [
+                        ['Activos', users.attr('data-value1')],
+                        ['Inactivos', users.attr('data-value2')]
+                    ],
+                    colors: {
+                        data1: '#1ab394',
+                        data2: '#BABABA'
+                    },
+                    type: 'pie'
+                }
+            });
+
+            // Clientes
+            // Datos unitarios
+            var clientes = $('#cliente');
+            Morris.Donut({
+                element: 'cliente',
+                data: [{label: "Trámites", value: clientes.attr('data-value1')},
+                    {label: "Arrendamientos", value: clientes.attr('data-value2')}],
+                resize: true,
+                colors: ['#54cdb4', '#1ab394']
+            });
+
+            // En porciento
+            c3.generate({
+                bindto: '#cliente1',
+                data: {
+                    columns: [
+                        ['Trámites', clientes.attr('data-value1')],
+                        ['Arrendamientos', clientes.attr('data-value2')]
+                    ],
+                    colors: {
+                        data1: '#1ab394',
+                        data2: '#BABABA'
+                    },
+                    type: 'pie'
+                }
+            });
+
+            // Area Legal
+            // Datos unitarios
+            var tramites = $('#tramite');
+            Morris.Donut({
+                element: 'tramite',
+                data: [{label: "En término", value: tramites.attr('data-value1')},
+                    {label: "Vencidos", value: tramites.attr('data-value2')},
+                    {label: "Completados", value: tramites.attr('data-value3')}
+                ],
+                resize: true,
+                colors: ['#54cdb4', '#1ab394', '#87d6c6']
+            });
+
+            // En porciento
+            c3.generate({
+                bindto: '#tramite1',
+                data: {
+                    columns: [
+                        ['En término', tramites.attr('data-value1')],
+                        ['Vencidos', tramites.attr('data-value2')],
+                        ['Completados', tramites.attr('data-value3')]
+                    ],
+                    colors: {
+                        data1: '#1ab394',
+                        data2: '#BABABA'
+                    },
+                    type: 'pie'
+                }
+            });
+            // Por meses
+            var tram = $('#tramite2');
+            Morris.Bar({
+                element: 'tramite2',
+                data: [
+                    {y: 'Enero', a: tram.attr('data-ini0'), b: tram.attr('data-ven0'), c: tram.attr('data-end0')},
+                    {y: 'Febrero', a: tram.attr('data-ini1'), b: tram.attr('data-ven1'), c: tram.attr('data-end1')},
+                    {y: 'Marzo', a: tram.attr('data-ini2'), b: tram.attr('data-ven2'), c: tram.attr('data-end2')},
+                    {y: 'Abril', a: tram.attr('data-ini3'), b: tram.attr('data-ven3'), c: tram.attr('data-end3')},
+                    {y: 'Mayo', a: tram.attr('data-ini4'), b: tram.attr('data-ven4'), c: tram.attr('data-end4')},
+                    {y: 'Junio', a: tram.attr('data-ini5'), b: tram.attr('data-ven5'), c: tram.attr('data-end5')},
+                    {y: 'Julio', a: tram.attr('data-ini6'), b: tram.attr('data-ven6'), c: tram.attr('data-end6')},
+                    {y: 'Agosto', a: tram.attr('data-ini7'), b: tram.attr('data-ven7'), c: tram.attr('data-end7')},
+                    {y: 'Septiembre', a: tram.attr('data-ini8'), b: tram.attr('data-ven8'), c: tram.attr('data-end8')},
+                    {y: 'Octubre', a: tram.attr('data-ini9'), b: tram.attr('data-ven9'), c: tram.attr('data-end9')},
+                    {
+                        y: 'Noviembre',
+                        a: tram.attr('data-ini10'),
+                        b: tram.attr('data-ven10'),
+                        c: tram.attr('data-end10')
+                    },
+                    {y: 'Diciembre', a: tram.attr('data-ini11'), b: tram.attr('data-ven11'), c: tram.attr('data-end11')}
+                ],
+                xkey: 'y',
+                ykeys: ['a', 'b', 'c'],
+                labels: ['Iniciados', 'Vencen', 'Completados'],
+                hideHover: 'auto',
+                resize: false,
+                barColors: ['#1ab394', '#ff7f0e', '#1f77b4']
+            });
+
+            // Control de Fondo
+            // Datos unitarios
+            var cf = $('#cf');
+            var cfpr = $('#cfpr');
+            Morris.Donut({
+                element: 'cf',
+                data: [{label: "Activos", value: cf.attr('data-value1')},
+                    {label: "Inactivos", value: cf.attr('data-value2')}
+                ],
+                resize: true,
+                colors: ['#54cdb4', '#1ab394']
+            });
+            // En porciento
+            c3.generate({
+                bindto: '#cf1',
+                data: {
+                    columns: [
+                        ['Activos', cf.attr('data-value1')],
+                        ['Inactivos', cf.attr('data-value2')]
+                    ],
+                    colors: {
+                        data1: '#1ab394',
+                        data2: '#BABABA'
+                    },
+                    type: 'pie'
+                }
+            });
+            c3.generate({
+                bindto: '#cfpr',
+                data: {
+                    columns: [
+                        ['Plan Anual', cfpr.attr('data-value1')],
+                        ['Recaudado', cfpr.attr('data-value2')]
+                    ],
+                    colors: {
+                        data1: '#1ab394',
+                        data2: '#BABABA'
+                    },
+                    type: 'pie'
+                }
+            });
+            // Por meses
+            var cfrxm = $('#cfrxm');
+            Morris.Bar({
+                element: 'cfrxm',
+                data: [
+                    {y: 'Enero', a: cfrxm.attr('data-value0')},
+                    {y: 'Febrero', a: cfrxm.attr('data-value1')},
+                    {y: 'Marzo', a: cfrxm.attr('data-value2')},
+                    {y: 'Abril', a: cfrxm.attr('data-value3')},
+                    {y: 'Mayo', a: cfrxm.attr('data-value4')},
+                    {y: 'Junio', a: cfrxm.attr('data-value5')},
+                    {y: 'Julio', a: cfrxm.attr('data-value6')},
+                    {y: 'Agosto', a: cfrxm.attr('data-value7')},
+                    {y: 'Septiembre', a: cfrxm.attr('data-value8')},
+                    {y: 'Octubre', a: cfrxm.attr('data-value9')},
+                    {y: 'Noviembre', a: cfrxm.attr('data-value10')},
+                    {y: 'Diciembre', a: cfrxm.attr('data-value11')}
+                ],
+                xkey: 'y',
+                ykeys: ['a'],
+                labels: ['Recaudado'],
+                hideHover: 'auto',
+                resize: false,
+                barColors: ['#1ab394']
+            });
+
+            // Recursos Humanos
+            // Datos unitarios
+            var rh = $('#rh');
+            Morris.Donut({
+                element: 'rh',
+                data: [{label: "Hombres", value: rh.attr('data-value1')},
+                    {label: "Mujeres", value: rh.attr('data-value2')}
+                ],
+                resize: true,
+                colors: ['#54cdb4', '#1ab394']
+            });
+            var rhb = $('#rhb');
+            Morris.Donut({
+                element: 'rhb',
+                data: [{label: "Hombres", value: rhb.attr('data-value1')},
+                    {label: "Mujeres", value: rhb.attr('data-value2')}
+                ],
+                resize: true,
+                colors: ['#54cdb4', '#1ab394', '#87d6c6']
+            });
+
+            // En porciento
+            c3.generate({
+                bindto: '#rh1',
+                data: {
+                    columns: [
+                        ['Hombres', rh.attr('data-value1')],
+                        ['Mujeres', rh.attr('data-value2')]
+                    ],
+                    colors: {
+                        data1: '#1ab394',
+                        data2: '#BABABA'
+                    },
+                    type: 'pie'
+                }
+            });
+            c3.generate({
+                bindto: '#rhb1',
+                data: {
+                    columns: [
+                        ['Hombres', rhb.attr('data-value1')],
+                        ['Mujeres', rhb.attr('data-value2')]
+                    ],
+                    colors: {
+                        data1: '#1ab394',
+                        data2: '#BABABA'
+                    },
+                    type: 'pie'
+                }
+            });
+            // Por meses
+            var rhab = $('#rhab');
+            Morris.Bar({
+                element: 'rhab',
+                data: [
+                    {y: 'Enero', a: rhab.attr('data-alt0'), b: rhab.attr('data-baj0')},
+                    {y: 'Febrero', a: rhab.attr('data-alt1'), b: rhab.attr('data-baj1')},
+                    {y: 'Marzo', a: rhab.attr('data-alt2'), b: rhab.attr('data-baj2')},
+                    {y: 'Abril', a: rhab.attr('data-alt3'), b: rhab.attr('data-baj3')},
+                    {y: 'Mayo', a: rhab.attr('data-alt4'), b: rhab.attr('data-baj4')},
+                    {y: 'Junio', a: rhab.attr('data-alt5'), b: rhab.attr('data-baj5')},
+                    {y: 'Julio', a: rhab.attr('data-alt6'), b: rhab.attr('data-baj6')},
+                    {y: 'Agosto', a: rhab.attr('data-alt7'), b: rhab.attr('data-baj7')},
+                    {y: 'Septiembre', a: rhab.attr('data-alt8'), b: rhab.attr('data-baj8')},
+                    {y: 'Octubre', a: rhab.attr('data-alt9'), b: rhab.attr('data-baj9')},
+                    {y: 'Noviembre', a: rhab.attr('data-alt10'), b: rhab.attr('data-baj10')},
+                    {y: 'Diciembre', a: rhab.attr('data-alt11'), b: rhab.attr('data-baj11')}
+                ],
+                xkey: 'y',
+                ykeys: ['a', 'b'],
+                labels: ['Altas', 'Bajas'],
+                hideHover: 'auto',
+                resize: false,
+                barColors: ['#1ab394', '#ff7f0e']
+            });
+
+        });
+    </script>
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+
+        <div class="{{ is_granted('ROLE_ADMIN') or is_granted('ROLE_DIRECTOR')?'':'hidden' }}">
+            {# Usuarios #}
+            <div class="col-lg-6">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5 class="text-uppercase">Usuarios del sistema</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="row">
+                            <div class="col-lg-1"></div>
+                            <div class="col-lg-5">
+                                <div id="user" data-value1="{{ estadoUsuario[0] }}"
+                                     data-value2="{{ estadoUsuario[1] }}"></div>
+                            </div>
+                            <div class="col-lg-5">
+                                <div>
+                                    <div id="user1"></div>
+                                </div>
+                            </div>
+                            <div class="col-lg-1"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {# Clientes #}
+            <div class="col-lg-6">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5 class="text-uppercase">Clientes realizando operaciones</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="row">
+                            <div class="col-lg-1"></div>
+                            <div class="col-lg-5">
+                                <div id="cliente" data-value1="{{ clientes[1] }}"
+                                     data-value2="{{ clientes[0] }}"></div>
+                            </div>
+                            <div class="col-lg-5">
+                                <div>
+                                    <div id="cliente1"></div>
+                                </div>
+                            </div>
+                            <div class="col-lg-1"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="{{ is_granted('ROLE_ADMIN') or is_granted('ROLE_DIRECTOR') or is_granted('ROLE_ABOGADO')?'':'hidden' }}">
+            {# Area legal #}
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5 class="text-uppercase">área legal</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <div class="ibox float-e-margins">
+                                    <h5 class="text-center text-uppercase">Trámites</h5>
+
+                                    <div class="col-lg-6">
+                                        <div id="tramite" data-value1="{{ tramiteTermino[0] }}"
+                                             data-value2="{{ tramiteTermino[1] }}"
+                                             data-value3="{{ tramiteTermino[2] }}"></div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div>
+                                            <div id="tramite1"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-8">
+                                <div class="ibox float-e-margins">
+                                    <h5 class="text-center text-uppercase">Comportamiento mensual de los trámites</h5>
+
+                                    <div class="col-lg-12">
+                                        <div>
+                                            <div id="tramite2"
+                                                 data-ini0="{{ tramiteMeses[0][0] }}"
+                                                 data-ven0="{{ tramiteMeses[0][1] }}"
+                                                 data-end0="{{ tramiteMeses[0][2] }}"
+                                                 data-ini1="{{ tramiteMeses[1][0] }}"
+                                                 data-ven1="{{ tramiteMeses[1][1] }}"
+                                                 data-end1="{{ tramiteMeses[1][2] }}"
+                                                 data-ini2="{{ tramiteMeses[2][0] }}"
+                                                 data-ven2="{{ tramiteMeses[2][1] }}"
+                                                 data-end2="{{ tramiteMeses[2][2] }}"
+                                                 data-ini3="{{ tramiteMeses[3][0] }}"
+                                                 data-ven3="{{ tramiteMeses[3][1] }}"
+                                                 data-end3="{{ tramiteMeses[3][2] }}"
+                                                 data-ini4="{{ tramiteMeses[4][0] }}"
+                                                 data-ven4="{{ tramiteMeses[4][1] }}"
+                                                 data-end4="{{ tramiteMeses[4][2] }}"
+                                                 data-ini5="{{ tramiteMeses[5][0] }}"
+                                                 data-ven5="{{ tramiteMeses[5][1] }}"
+                                                 data-end5="{{ tramiteMeses[5][2] }}"
+                                                 data-ini6="{{ tramiteMeses[6][0] }}"
+                                                 data-ven6="{{ tramiteMeses[6][1] }}"
+                                                 data-end6="{{ tramiteMeses[6][2] }}"
+                                                 data-ini7="{{ tramiteMeses[7][0] }}"
+                                                 data-ven7="{{ tramiteMeses[7][1] }}"
+                                                 data-end7="{{ tramiteMeses[7][2] }}"
+                                                 data-ini8="{{ tramiteMeses[8][0] }}"
+                                                 data-ven8="{{ tramiteMeses[8][1] }}"
+                                                 data-end8="{{ tramiteMeses[8][2] }}"
+                                                 data-ini9="{{ tramiteMeses[9][0] }}"
+                                                 data-ven9="{{ tramiteMeses[9][1] }}"
+                                                 data-end9="{{ tramiteMeses[9][2] }}"
+                                                 data-ini10="{{ tramiteMeses[10][0] }}"
+                                                 data-ven10="{{ tramiteMeses[10][1] }}"
+                                                 data-end10="{{ tramiteMeses[10][2] }}"
+                                                 data-ini11="{{ tramiteMeses[11][0] }}"
+                                                 data-ven11="{{ tramiteMeses[11][1] }}"
+                                                 data-end11="{{ tramiteMeses[11][2] }}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="{{ is_granted('ROLE_ADMIN') or is_granted('ROLE_DIRECTOR') or is_granted('ROLE_CF')?'':'hidden' }}">
+            {# Control de Fondo #}
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5 class="text-uppercase">Control de fondo</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <div class="ibox float-e-margins">
+                                    <h5 class="text-center text-uppercase">Arrendamientos</h5>
+
+                                    <div class="col-lg-6">
+                                        <div id="cf" data-value1="{{ cf[0] }}"
+                                             data-value2="{{ cf[1] }}"></div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div>
+                                            <div id="cf1"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <div class="ibox float-e-margins">
+                                    <h5 class="text-center text-uppercase">Fondos</h5>
+
+                                    <div class="col-lg-12">
+                                        <div>
+                                            <strong>
+                                                Plan Anual: <span class="text-success">
+                                                <i class="fa fa-dollar"></i> {{ cfPlan }}
+                                            </span>
+                                            </strong>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div>
+                                            <strong>
+                                                Recaudado: <span class="text-green">
+                                                <i class="fa fa-dollar"></i> {{ cfRec }}
+                                            </span>
+                                            </strong>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-12">
+                                        <div>
+                                            <div id="cfpr" data-value1="{{ cfPlan }}" data-value2="{{ cfRec }}"></div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="ibox float-e-margins">
+                                    <h5 class="text-center text-uppercase">Recaudación mensual de fondos</h5>
+
+                                    <div>
+                                        <div id="cfrxm"
+                                             data-value0="{{ cfRMeses[0] }}"
+                                             data-value1="{{ cfRMeses[1] }}"
+                                             data-value2="{{ cfRMeses[2] }}"
+                                             data-value3="{{ cfRMeses[3] }}"
+                                             data-value4="{{ cfRMeses[4] }}"
+                                             data-value5="{{ cfRMeses[5] }}"
+                                             data-value6="{{ cfRMeses[6] }}"
+                                             data-value7="{{ cfRMeses[7] }}"
+                                             data-value8="{{ cfRMeses[8] }}"
+                                             data-value9="{{ cfRMeses[9] }}"
+                                             data-value10="{{ cfRMeses[10] }}"
+                                             data-value11="{{ cfRMeses[11] }}">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="{{ is_granted('ROLE_ADMIN') or is_granted('ROLE_DIRECTOR') or is_granted('ROLE_RH')?'':'hidden' }}">
+            {# Recursos humanos #}
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5 class="text-uppercase">Recursos Humanos</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <div class="ibox float-e-margins">
+                                    <h5 class="text-center text-uppercase">Plantilla Activa</h5>
+
+                                    <div class="col-lg-6">
+                                        <div id="rh" data-value1="{{ rh[0] }}"
+                                             data-value2="{{ rh[1] }}"></div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div>
+                                            <div id="rh1"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <div class="ibox float-e-margins">
+                                    <h5 class="text-center text-uppercase">Bajas Laborales</h5>
+
+                                    <div class="col-lg-6 {{ rhb[0]!=0 or rhb[1]!=0?'':'hidden' }}">
+                                        <div id="rhb" data-value1="{{ rhb[0] }}"
+                                             data-value2="{{ rhb[1] }}"></div>
+                                    </div>
+
+                                    <div class="col-lg-6 {{ rhb[0]!=0 or rhb[1]!=0?'':'hidden' }}">
+                                        <div>
+                                            <div id="rhb1"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-12 {{ rhb[0]==0 and rhb[1]==0?'':'hidden' }}">
+                                        <div class="block text-center text-info text-uppercase">
+                                            No hay bajas laborales
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="ibox float-e-margins">
+                                    <h5 class="text-center text-uppercase">Comportamiento mensual de la plantilla
+                                        laboral</h5>
+
+                                    <div>
+                                        <div id="rhab"
+                                             data-alt0="{{ rhab[0][0] }}" data-baj0="{{ rhab[0][1] }}"
+                                             data-alt1="{{ rhab[1][0] }}" data-baj1="{{ rhab[1][1] }}"
+                                             data-alt2="{{ rhab[2][0] }}" data-baj2="{{ rhab[2][1] }}"
+                                             data-alt3="{{ rhab[3][0] }}" data-baj3="{{ rhab[3][1] }}"
+                                             data-alt4="{{ rhab[4][0] }}" data-baj4="{{ rhab[4][1] }}"
+                                             data-alt5="{{ rhab[5][0] }}" data-baj5="{{ rhab[5][1] }}"
+                                             data-alt6="{{ rhab[6][0] }}" data-baj6="{{ rhab[6][1] }}"
+                                             data-alt7="{{ rhab[7][0] }}" data-baj7="{{ rhab[7][1] }}"
+                                             data-alt8="{{ rhab[8][0] }}" data-baj8="{{ rhab[8][1] }}"
+                                             data-alt9="{{ rhab[9][0] }}" data-baj9="{{ rhab[9][1] }}"
+                                             data-alt10="{{ rhab[10][0] }}" data-baj10="{{ rhab[10][1] }}"
+                                             data-alt11="{{ rhab[11][0] }}" data-baj11="{{ rhab[11][1] }}">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

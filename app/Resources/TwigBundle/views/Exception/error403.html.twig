@@ -1,0 +1,22 @@
+{% extends 'templates/base.html.twig' %}
+
+{% block title %}
+    Sistema de Vivienda | Error 403
+{% endblock %}
+
+{% block ebody %}
+    <body class="gray-bg">
+
+    <div class="middle-box text-center animated fadeInDown">
+        <h1>403</h1>
+
+        <h3 class="font-bold">Acceso denegado.</h3>
+
+        <div class="error-desc">
+            Lo sentimos pero no tiene permiso para estar aquí. <a href="{{ path('_redirect') }}" class="text-primary">
+                Ir al inicio.</a>
+        </div>
+    </div>
+
+    </body>
+{% endblock %}

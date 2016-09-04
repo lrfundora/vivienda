@@ -1,0 +1,80 @@
+<!doctype>
+<html>
+<head>
+    <title>jsPDF</title>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" type="text/css" href="css/smoothness/jquery-ui-1.8.17.custom.css">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+
+    <script type="text/javascript" src="js/jquery/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript" src="js/jquery/jquery-ui-1.8.17.custom.min.js"></script>
+    <script type="text/javascript" src="dist/jspdf.debug.js"></script>
+    <script type="text/javascript" src="js/basic.js"></script>
+
+    <script>
+        $(function() {
+            $("#accordion-basic, #accordion-text, #accordion-graphic").accordion({
+                autoHeight: false,
+                navigation: true
+            });
+            $( "#tabs" ).tabs();
+            $(".button").button();
+        });
+    </script>
+</head>
+
+<body>
+
+
+<a href="javascript:table1FromHTML()" type="button" class="btn btn-danger btn-xs"> Exportar</a>
+
+	<div id="tabla1">
+		<table>
+			<colgroup>
+				<col width="20%">
+				<col width="20%">
+				<col width="20%">
+				<col width="20%">
+				<col width="20%">
+			</colgroup>
+			<thead>
+			<tr>
+				<th>Heading1</th>
+				<th>Heading2</th>
+				<th>Heading3</th>
+				<th>Heading4</th>
+				<th>Heading5</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr>
+				<td>cell 1,1</td>
+				<td>cell 1,2</td>
+				<td>cell 1,1</td>
+				<td>cell 1,2</td>
+				<td>cell 1,1</td>
+			</tr>
+			<tr>
+				<td>
+					cell 1,1
+				</td>
+				<td>
+					cell 1,2
+				</td>
+				<td>
+					cell 1,1
+				</td>
+				<td>
+					cell 1,2
+				</td>
+				<td>
+					cell 1,1
+				</td>
+			</tr>
+			</tbody>
+		</table>
+	</div>
+
+</body>
+</html>
